@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Bohol DigiRent</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --sand: #E8DCC8;
+    --brown: #3D2B1F;
+    --amber: #C8761A;
+    --amber-light: #E8962A;
+    --forest: #2C4A3E;
+    --rust: #A84432;
+    --white: #FDFAF5;
+    --dark: #1A1208;
+    --mid: #6B5744;
+    --border: rgba(61,43,31,0.15);
+    --shadow: 0 4px 32px rgba(61,43,31,0.12);
+    --radius: 2px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--brown); overflow-x: hidden; }
+
+  /* ADMIN SECTION */
+  .admin-gate { background: var(--forest); padding: 4rem 5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+  .admin-login-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; max-width: 400px; width: 100%; text-align: center; }
+  .admin-login-card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--brown); }
+  .admin-login-card p { font-size: 0.875rem; color: var(--mid); margin-bottom: 1.5rem; }
+  .admin-content { display: none; }
+  .admin-content.active { display: block; }
+
+  .admin-bar { background: var(--forest); padding: 1rem 5rem; display: flex; align-items: center; justify-content: space-between; }
+  .admin-bar span { font-size: 0.8125rem; color: rgba(245,240,232,0.7); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; }
+  .admin-bar button { background: rgba(245,240,232,0.15); color: var(--cream); border: 1px solid rgba(245,240,232,0.25); padding: 0.4rem 1rem; border-radius: var(--radius); font-size: 0.8125rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: 0.2s; }
+  .admin-bar button:hover { background: rgba(245,240,232,0.25); }
+
+  /* ADMIN TABS */
+  .admin-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 2rem; }
+  .admin-tab { padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--mid); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: 0.2s; font-family: 'DM Sans', sans-serif; background: none; border-top: none; border-left: none; border-right: none; }
+  .admin-tab:hover { color: var(--amber); }
+  .admin-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+  .admin-tabs-body { position: relative; }
+  .admin-tab-content { display: block; visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
+  .admin-tab-content.active { visibility: visible; position: relative; pointer-events: auto; }
+
+  /* ADD EQUIPMENT FORM */
+  .add-eq-form { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; }
+  .add-eq-form h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--brown); }
+
+  /* TABLE */
+  .filter-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn { padding: 0.4rem 1rem; border: 1.5px solid var(--border); background: transparent; border-radius: var(--radius); font-size: 0.8125rem; color: var(--mid); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .filter-btn.active, .filter-btn:hover { background: var(--brown); color: var(--cream); border-color: var(--brown); }
+
+  /* STATUS SUMMARY CARDS */
+  .status-summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .summary-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.875rem; cursor: pointer; transition: all 0.18s; position: relative; overflow: hidden; }
+  .summary-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+  .summary-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(61,43,31,0.12); }
+  .summary-card.active { box-shadow: 0 4px 16px rgba(61,43,31,0.15); }
+  .summary-card--pending::before { background: #D4A017; }
+  .summary-card--confirmed::before { background: #059669; }
+  .summary-card--returned::before { background: #2563EB; }
+  .summary-card--renting::before   { background: #7C3AED; }
+  .summary-card--cancelled::before { background: var(--rust); }
+  .summary-card--pending.active { border-color: #D4A017; background: #FFFBEB; }
+  .summary-card--confirmed.active { border-color: #059669; background: #F0FDF9; }
+  .summary-card--returned.active { border-color: #2563EB; background: #EFF6FF; }
+  .summary-card--renting.active   { border-color: #7C3AED; background: #F5F3FF; }
+  .summary-card--cancelled.active { border-color: var(--rust); background: #FFF5F5; }
+  .summary-icon { font-size: 1.625rem; line-height: 1; flex-shrink: 0; }
+  .summary-info { flex: 1; min-width: 0; }
+  .summary-count { font-family: 'Playfair Display', serif; font-size: 1.875rem; font-weight: 700; line-height: 1; color: var(--brown); }
+  .summary-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid); margin-top: 0.2rem; }
+  @media (max-width: 1024px) { .status-summary { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 768px) { .status-summary { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .status-summary { grid-template-columns: 1fr 1fr; } }
+
+  /* SEARCH BAR */
+  .search-bar-wrap { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .search-bar-wrap input { flex: 1; padding: 0.6rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--brown); background: var(--cream); outline: none; transition: border-color 0.2s; }
+  .search-bar-wrap input:focus { border-color: var(--amber); background: var(--white); }
+  .search-bar-wrap .search-go { padding: 0.6rem 1.25rem; background: var(--brown); color: var(--cream); border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+  .search-bar-wrap .search-go:hover { background: var(--amber); }
+  .search-bar-wrap .search-clear { padding: 0.6rem 0.9rem; background: transparent; color: var(--mid); border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 1rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .search-bar-wrap .search-clear:hover { background: var(--cream); color: var(--rust); border-color: var(--rust); }
+
+  /* OVERDUE BADGE */
+  .status-overdue { background: #FEE2E2; color: #7F1D1D; border: 1px solid #FCA5A5; }
+  .badge-sale { display:inline-block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:#E8230A;color:#fff;padding:0.15rem 0.4rem;border-radius:2px;margin-left:0.35rem;vertical-align:middle;font-weight:700;box-shadow:0 1px 4px rgba(232,35,10,0.35); }
+  .overdue-row td { background: rgba(168,68,50,0.05) !important; }
+  .overdue-tag { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.6rem; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; color: #7F1D1D; background: #FEE2E2; border: 1px solid #FCA5A5; border-radius: 2px; padding: 0.15rem 0.45rem; margin-left: 0.3rem; vertical-align: middle; }
+
+  /* TRANSACTION SUMMARY PANEL */
+  .txn-panel { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; display: none; }
+  .txn-panel.active { display: block; }
+  .txn-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .txn-panel-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--brown); }
+  .txn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+  .txn-stat { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1rem; }
+  .txn-stat-val { font-family: 'Playfair Display', serif; font-size: 1.375rem; font-weight: 700; color: var(--brown); }
+  .txn-stat-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-top: 0.2rem; }
+  .txn-bookings-list { border-top: 1px solid var(--border); padding-top: 1rem; max-height: 280px; overflow-y: auto; }
+  .txn-booking-row { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.8125rem; gap: 0.75rem; }
+  .txn-booking-row:last-child { border-bottom: none; }
+  .txn-close { background: none; border: 1px solid var(--border); color: var(--mid); padding: 0.3rem 0.75rem; border-radius: var(--radius); font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .txn-close:hover { background: var(--cream); }
+  .table-wrapper { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { background: var(--brown); color: var(--cream); padding: 0.875rem 1.25rem; text-align: left; font-family: 'DM Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+  td { padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border); color: var(--brown); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(61,43,31,0.02); }
+
+  .status-badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: var(--radius); font-size: 0.6875rem; font-family: 'DM Mono', monospace; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+  .status-pending { background: #FFF3CD; color: #856404; }
+  .status-confirmed { background: #D1FAE5; color: #065F46; }
+  .status-returned { background: #DBEAFE; color: #1E40AF; }
+  .status-cancelled { background: #FEE2E2; color: #991B1B; }
+  .status-renting  { background: #EDE9FE; color: #5B21B6; }
+
+  /* ACTION DROPDOWN */
+  .action-dropdown { position: relative; display: inline-block; }
+  .action-dropdown-toggle { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border: 1.5px solid var(--border); background: var(--white); color: var(--brown); border-radius: var(--radius); font-size: 0.8rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .action-dropdown-toggle:hover { background: var(--brown); color: var(--cream); border-color: var(--brown); }
+  .action-dropdown-toggle .chevron { font-size: 0.6rem; opacity: 0.6; transition: transform 0.2s; }
+  .action-dropdown-toggle.open .chevron { transform: rotate(180deg); }
+  .action-dropdown-menu { display: none; position: fixed; background: var(--white); border: 1.5px solid var(--border); border-radius: 4px; box-shadow: 0 8px 24px rgba(61,43,31,0.18); z-index: 9999; min-width: 170px; overflow: hidden; }
+  .action-dropdown-menu.open { display: block; }
+  .action-dropdown-menu button { display: flex; align-items: center; gap: 0.5rem; width: 100%; padding: 0.55rem 1rem; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.8125rem; color: var(--brown); cursor: pointer; text-align: left; transition: background 0.12s; white-space: nowrap; }
+  .action-dropdown-menu button:hover { background: var(--cream); }
+  .action-dropdown-menu button.item-danger { color: var(--rust); }
+  .action-dropdown-menu button.item-danger:hover { background: #FEE2E2; }
+  .action-dropdown-menu button.item-cancel { color: #92400E; }
+  .action-dropdown-menu button.item-cancel:hover { background: #FEF3C7; }
+  .action-dropdown-menu button.item-confirm { color: #065F46; }
+  .action-dropdown-menu button.item-confirm:hover { background: #D1FAE5; }
+  .action-dropdown-menu button.item-renting { color: #5B21B6; }
+  .action-dropdown-menu button.item-renting:hover { background: #EDE9FE; }
+  .action-dropdown-menu button.item-returned { color: #1E40AF; }
+  .action-dropdown-menu button.item-returned:hover { background: #DBEAFE; }
+  .action-dropdown-divider { height: 1px; background: var(--border); margin: 0.25rem 0; }
+
+  /* FORMS */
+  .section { padding: 6rem 5rem; }
+  .section-alt { background: var(--white); }
+  .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.25em; color: var(--amber); text-transform: uppercase; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+  .section-eyebrow::before { content: ''; width: 1.5rem; height: 1px; background: var(--amber); }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3.5rem; gap: 2rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--brown); margin-bottom: 0.5rem; letter-spacing: 0.01em; }
+  input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.9375rem; color: var(--brown); background: var(--cream); transition: border-color 0.2s; outline: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--amber); background: var(--white); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-submit { width: 100%; padding: 1rem; background: var(--amber); color: var(--white); border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+  .form-submit:hover { background: var(--amber-light); }
+  .err-msg { display: none; font-size: 0.75rem; color: var(--rust); margin-top: 0.4rem; }
+  .err-msg.show { display: block; }
+
+  .btn-primary { background: var(--amber); color: var(--white); padding: 0.875rem 2rem; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s, transform 0.15s; }
+  .btn-primary:hover { background: var(--amber-light); }
+
+  /* TOAST */
+  .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; display: flex; flex-direction: column; gap: 0.75rem; }
+  .toast { background: var(--brown); color: var(--cream); padding: 1rem 1.5rem; border-radius: var(--radius); font-size: 0.875rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: var(--shadow); animation: slideIn 0.3s ease; max-width: 360px; }
+  .toast.success { border-left: 3px solid #4CAF50; }
+  .toast.error { border-left: 3px solid var(--rust); }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(26,18,8,0.7); z-index: 500; display: none; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px); }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--white); border-radius: var(--radius); padding: 2.5rem; max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+  .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.75rem; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.375rem; font-weight: 700; color: var(--brown); }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--mid); line-height: 1; padding: 0.25rem; transition: color 0.2s; }
+  .modal-close:hover { color: var(--brown); }
+
+  .loading-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--mid); }
+  .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+  .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--brown); }
+  .empty-state p { font-size: 0.875rem; }
+
+  /* EQUIPMENT AVAILABILITY CALENDAR (admin) */
+  .eq-cal-wrap { margin-top: 0.75rem; background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem; }
+  .eq-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+  .eq-cal-nav { background: none; border: 1px solid var(--border); border-radius: 2px; width: 24px; height: 24px; cursor: pointer; font-size: 0.85rem; color: var(--brown); display: flex; align-items: center; justify-content: center; }
+  .eq-cal-nav:hover { background: var(--cream); }
+  .eq-cal-label { font-size: 0.72rem; font-weight: 700; color: var(--brown); min-width: 90px; text-align: center; }
+  .eq-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; font-size: 0.65rem; text-align: center; }
+  .eq-cal-grid .ec-hdr { color: var(--mid); font-weight: 600; padding: 1px 0; }
+  .eq-cal-grid .ec-day { padding: 3px 1px; border-radius: 2px; color: var(--brown); }
+  .eq-cal-grid .ec-day.ec-past { color: var(--sand); }
+  .eq-cal-grid .ec-day.ec-confirmed { background: #A84432; color: #fff; font-weight: 700; cursor: not-allowed; }
+  .eq-cal-grid .ec-day.ec-pending { background: #FFF3CD; color: #856404; font-weight: 600; cursor: default; }
+  .eq-cal-grid .ec-day.ec-avail { background: rgba(44,74,62,0.10); color: var(--forest); }
+  .eq-cal-grid .ec-day.ec-today { outline: 1.5px solid var(--amber); outline-offset: -1px; }
+  .eq-cal-legend { display: flex; gap: 0.6rem; margin-top: 0.4rem; font-size: 0.62rem; color: var(--mid); flex-wrap: wrap; }
+  .eq-cal-legend span { display: flex; align-items: center; gap: 0.25rem; }
+  .eq-cal-legend .dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
+  /* NOTEPAD */
+  .note-card { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; position: relative; transition: box-shadow 0.18s; }
+  .note-card:hover { box-shadow: 0 4px 16px rgba(61,43,31,0.1); }
+  .note-card--cream { background: #FFFBEB; border-color: #D4A017; }
+  .note-card--green { background: #F0FDF9; border-color: #059669; }
+  .note-card--blue { background: #EFF6FF; border-color: #2563EB; }
+  .note-card--red { background: #FFF5F5; border-color: #A84432; }
+  .note-card--purple { background: #F5F3FF; border-color: #7C3AED; }
+  .note-card-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--brown); margin-bottom: 0.5rem; }
+  .note-card-body { font-size: 0.875rem; color: var(--brown); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+  .note-card-meta { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--mid); margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(61,43,31,0.1); }
+  .note-card-delete { position: absolute; top: 0.75rem; right: 0.75rem; background: none; border: 1px solid rgba(168,68,50,0.3); color: var(--rust); width: 26px; height: 26px; border-radius: var(--radius); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.15s; opacity: 0; }
+  .note-card:hover .note-card-delete { opacity: 1; }
+  .note-card-delete:hover { background: var(--rust); color: white; border-color: var(--rust); }
+
+  @media (max-width: 1024px) {
+    .section { padding: 4rem 2rem; }
+    .admin-bar { padding: 1rem 2rem; }
+    .admin-gate { padding: 3rem 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .settings-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init({ publicKey: 'jfoYjhx3Ik1Lwxrnw' });</script>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div class="admin-gate" id="admin-gate">
+  <div class="admin-login-card">
+    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🔐</div>
+    <h3>Admin Access</h3>
+    <p>Enter your credentials to manage bookings and equipment.</p>
+    <div class="form-group" style="text-align:left;">
+      <label>Username</label>
+      <input type="text" id="admin-user" placeholder="Enter username" autocomplete="off" onkeydown="if(event.key==='Enter')adminLogin()">
+    </div>
+    <div class="form-group" style="text-align:left;">
+      <label>Password</label>
+      <input type="password" id="admin-pw" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()">
+      <div class="err-msg" id="admin-pw-err" style="margin-top:0.4rem;">⚠ Incorrect username or password.</div>
+    </div>
+    <button class="form-submit" onclick="adminLogin()" style="margin-top:0.25rem;">Login →</button>
+  </div>
+</div>
+
+<!-- ADMIN CONTENT -->
+<div class="admin-content" id="admin-content">
+  <div class="admin-bar">
+    <span>🔐 ADMIN DASHBOARD · <span id="admin-username-display">Bohol DigiRent</span></span>
+    <button onclick="adminLogout()">Logout</button>
+  </div>
+  <div class="section section-alt">
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('tab-bookings',this)">📋 Bookings</button>
+      <button class="admin-tab" onclick="switchAdminTab('tab-equipment',this)">📷 Equipment</button>
+      <button class="admin-tab" onclick="switchAdminTab('tab-notepad',this)">📝 Notepad</button>
+      <button class="admin-tab" onclick="switchAdminTab('tab-settings',this)">⚙️ Settings</button>
+    </div>
+
+    <div class="admin-tabs-body">
+    <!-- BOOKINGS TAB -->
+    <div class="admin-tab-content active" id="tab-bookings">
+      <div class="section-header" style="margin-bottom:1.5rem;">
+        <div>
+          <div class="section-eyebrow">Admin</div>
+          <h2 class="section-title">All Bookings <span id="booking-count-badge" style="font-size:1rem;font-weight:400;color:var(--mid);font-family:'DM Sans',sans-serif;"></span></h2>
+        </div>
+        <div class="filter-row">
+          <button class="filter-btn active" data-status="all">All</button>
+          <button class="filter-btn" data-status="pending">Pending</button>
+          <button class="filter-btn" data-status="confirmed">Confirmed</button>
+          <button class="filter-btn" data-status="renting">Renting</button>
+          <button class="filter-btn" data-status="returned">Returned</button>
+          <button class="filter-btn" data-status="cancelled">Cancelled</button>
+        </div>
+      </div>
+
+      <!-- STATUS SUMMARY CARDS -->
+      <div class="status-summary">
+        <div class="summary-card summary-card--pending" onclick="setStatusFilter('pending')" id="summary-pending">
+          <div class="summary-icon">🕐</div>
+          <div class="summary-info">
+            <div class="summary-count" id="count-pending">0</div>
+            <div class="summary-label">Pending</div>
+          </div>
+        </div>
+        <div class="summary-card summary-card--confirmed" onclick="setStatusFilter('confirmed')" id="summary-confirmed">
+          <div class="summary-icon">✅</div>
+          <div class="summary-info">
+            <div class="summary-count" id="count-confirmed">0</div>
+            <div class="summary-label">Confirmed</div>
+          </div>
+        </div>
+        <div class="summary-card summary-card--renting" onclick="setStatusFilter('renting')" id="summary-renting">
+          <div class="summary-icon">🎥</div>
+          <div class="summary-info">
+            <div class="summary-count" id="count-renting">0</div>
+            <div class="summary-label">Renting</div>
+          </div>
+        </div>
+        <div class="summary-card summary-card--returned" onclick="setStatusFilter('returned')" id="summary-returned">
+          <div class="summary-icon">📦</div>
+          <div class="summary-info">
+            <div class="summary-count" id="count-returned">0</div>
+            <div class="summary-label">Returned</div>
+          </div>
+        </div>
+        <div class="summary-card summary-card--cancelled" onclick="setStatusFilter('cancelled')" id="summary-cancelled">
+          <div class="summary-icon">❌</div>
+          <div class="summary-info">
+            <div class="summary-count" id="count-cancelled">0</div>
+            <div class="summary-label">Cancelled</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEARCH BAR -->
+      <div class="search-bar-wrap">
+        <input type="text" id="booking-search" placeholder="🔍  Search by name, email, phone, equipment, booking ID…">
+        <button class="search-clear" title="Clear">✕</button>
+      </div>
+
+      <!-- TRANSACTION SUMMARY PANEL -->
+      <div class="txn-panel" id="txn-panel">
+        <div class="txn-panel-header">
+          <div class="txn-panel-title" id="txn-panel-title">Customer Transactions</div>
+          <button class="txn-close" onclick="closeTxnPanel()">✕ Close</button>
+        </div>
+        <div class="txn-grid" id="txn-grid"></div>
+        <div class="txn-bookings-list" id="txn-list"></div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Customer</th>
+              <th>Equipment</th>
+              <th>Dates</th>
+              <th>Total / Paid</th>
+              <th>IDs &amp; Receipt</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-body">
+            <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--mid);">⏳ Connecting to Firebase…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NOTEPAD TAB -->
+    <div class="admin-tab-content" id="tab-notepad">
+      <div class="section-header" style="margin-bottom:1.5rem;">
+        <div>
+          <div class="section-eyebrow">Admin Notes</div>
+          <h2 class="section-title">Notepad</h2>
+        </div>
+      </div>
+      <div style="max-width:700px;">
+        <div class="add-eq-form" style="margin-bottom:1.5rem;">
+          <h4>➕ Add New Note</h4>
+          <div class="form-group" style="margin-bottom:0.75rem;margin-top:0.75rem;">
+            <label>Note Title <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(optional)</span></label>
+            <input type="text" id="note-title" placeholder="e.g. Reminder, Follow-up, Important…">
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>Note Content <span style="font-size:0.75rem;color:var(--rust);font-weight:400;">*</span></label>
+            <textarea id="note-content" placeholder="Write your note here…" style="min-height:100px;"></textarea>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center;">
+            <button class="btn-primary" onclick="addAdminNote()" style="padding:0.6rem 1.5rem;font-size:0.875rem;">Save Note →</button>
+            <select id="note-color" style="width:auto;padding:0.6rem 0.8rem;font-size:0.85rem;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--cream);cursor:pointer;color:var(--brown);">
+              <option value="cream">🟡 Default</option>
+              <option value="green">🟢 Green</option>
+              <option value="blue">🔵 Blue</option>
+              <option value="red">🔴 Red</option>
+              <option value="purple">🟣 Purple</option>
+            </select>
+          </div>
+        </div>
+        <div id="notes-list" style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="text-align:center;padding:2rem;color:var(--mid);font-size:0.875rem;">📝 No notes yet. Add your first note above.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="admin-tab-content" id="tab-settings">
+      <div class="section-header" style="margin-bottom:1.5rem;">
+        <div>
+          <div class="section-eyebrow">Security</div>
+          <h2 class="section-title">Admin Settings</h2>
+        </div>
+      </div>
+
+      <div style="max-width:480px;">
+
+        <!-- CHANGE PASSWORD via Firebase Auth -->
+        <div class="add-eq-form">
+          <h4>🔑 Change Password</h4>
+          <p style="font-size:0.8125rem;color:var(--mid);margin-bottom:1.25rem;line-height:1.6;">Update your login password using Firebase Authentication. Takes effect immediately across all devices.</p>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="pw-current" placeholder="Enter current password">
+            <div class="err-msg" id="pw-current-err">⚠ Current password is incorrect.</div>
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="pw-new" placeholder="At least 6 characters">
+            <div class="err-msg" id="pw-new-err">⚠ New password must be at least 6 characters.</div>
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="pw-confirm" placeholder="Re-enter new password">
+            <div class="err-msg" id="pw-confirm-err">⚠ Passwords do not match.</div>
+          </div>
+          <button class="btn-primary" onclick="changeAdminPassword()" style="padding:0.6rem 1.5rem;font-size:0.875rem;">Update Password →</button>
+        </div>
+
+        <div class="add-eq-form" style="margin-top:1.5rem;background:rgba(44,74,62,0.06);border-color:rgba(44,74,62,0.2);">
+          <h4 style="color:var(--forest);">ℹ️ Managing Admin Accounts</h4>
+          <p style="font-size:0.8125rem;color:var(--mid);line-height:1.7;">To add or remove admin users, or to reset your email, go to your <a href="https://console.firebase.google.com" target="_blank" style="color:var(--amber);font-weight:600;">Firebase Console</a> → Authentication → Users. Your credentials are stored securely by Firebase — never in this file.</p>
+        </div>
+
+        <!-- PROMO / HERO IMAGE -->
+        <div class="add-eq-form" style="margin-top:1.5rem;background:rgba(200,118,26,0.04);border-color:rgba(200,118,26,0.25);">
+          <h4 style="color:var(--amber);">🖼️ Homepage Promo Image</h4>
+          <p style="font-size:0.8125rem;color:var(--mid);line-height:1.7;margin-bottom:1rem;">
+            Upload an image to display in the hero section of the homepage. Paste a direct image URL below, or upload a file. Leave blank / remove to hide the promo panel.
+          </p>
+          <div class="form-group">
+            <label>Image URL <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(paste a direct link)</span></label>
+            <input type="url" id="promo-url" placeholder="https://example.com/promo.jpg" oninput="previewPromo(this.value)">
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>— or upload a file —</label>
+            <input type="file" id="promo-file" accept="image/*" style="padding:0.5rem;cursor:pointer;">
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>Promo Title <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(shown below the image on homepage)</span></label>
+            <input type="text" id="promo-title" placeholder="e.g. New Arrival: DJI Mavic 3 Pro">
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>Promo Subtitle <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(smaller text below the title)</span></label>
+            <input type="text" id="promo-subtitle" placeholder="e.g. Available now — click to learn more">
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>Click Link <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(where the image links to when clicked)</span></label>
+            <input type="url" id="promo-link" placeholder="https://example.com or #equipment">
+          </div>
+          <div id="promo-preview-wrap" style="display:none;margin-bottom:1rem;">
+            <img id="promo-preview-img" src="" alt="Promo Preview"
+              style="max-height:180px;max-width:100%;border-radius:6px;border:1px solid var(--border);object-fit:contain;">
+            <p style="font-size:0.72rem;color:var(--mid);margin-top:0.35rem;">Preview — this is how it will appear on the homepage.</p>
+          </div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+            <button class="btn-primary" id="promo-save-btn" onclick="savePromoImage()" style="padding:0.6rem 1.5rem;font-size:0.875rem;">Save Promo Image →</button>
+            <button onclick="clearPromoImage()" style="background:transparent;color:var(--rust);padding:0.55rem 1.1rem;border:1.5px solid rgba(168,68,50,0.35);border-radius:var(--radius);font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Remove Image</button>
+          </div>
+          <div id="promo-save-result" style="margin-top:0.75rem;font-size:0.8rem;display:none;"></div>
+        </div>
+
+        <div class="add-eq-form" style="margin-top:1.5rem;background:rgba(168,68,50,0.04);border-color:rgba(168,68,50,0.2);">
+          <h4 style="color:var(--rust);">🔄 Sync Availability Calendar</h4>
+          <p style="font-size:0.8125rem;color:var(--mid);line-height:1.7;margin-bottom:1rem;">Run this once to copy your existing bookings into the public <code style="font-family:'DM Mono',monospace;font-size:0.75rem;background:var(--sand);padding:1px 5px;border-radius:2px;">/availability</code> node. This is needed after the security update so the calendar on the public site shows blocked dates again. Safe to run multiple times.</p>
+          <button class="btn-primary" onclick="migrateToAvailability()" id="migrate-avail-btn" style="padding:0.6rem 1.5rem;font-size:0.875rem;background:var(--forest);">Sync Now →</button>
+          <div id="migrate-avail-result" style="margin-top:0.75rem;font-size:0.8rem;display:none;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EQUIPMENT TAB -->
+    <div class="admin-tab-content" id="tab-equipment">
+      <div class="section-header" style="margin-bottom:1.5rem;">
+        <div>
+          <div class="section-eyebrow">Inventory</div>
+          <h2 class="section-title">Manage Equipment</h2>
+        </div>
+      </div>
+      <!-- ADD EQUIPMENT FORM -->
+      <div class="add-eq-form">
+        <h4>➕ Add New Equipment</h4>
+        <div class="form-row" style="margin-bottom:1rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Equipment Name</label>
+            <input type="text" id="eq-name" placeholder="e.g. Sony A7 IV">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Category</label>
+            <select id="eq-cat">
+              <option value="mirrorless">Mirrorless</option>
+              <option value="dslr">DSLR</option>
+              <option value="drone">Drone</option>
+              <option value="lens">Lens</option>
+              <option value="accessory">Accessory</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:1rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Price per Day (₱)</label>
+            <input type="number" id="eq-price" placeholder="e.g. 1500" min="1">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Sale Price / Day (₱) <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">optional — leave blank if no promo</span></label>
+            <input type="number" id="eq-sale-price" placeholder="e.g. 999" min="0">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Status</label>
+            <select id="eq-avail">
+              <option value="true">Available</option>
+              <option value="false">Unavailable</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="eq-desc" placeholder="Brief description of the equipment..." style="min-height:70px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Equipment Image <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(optional)</span></label>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <label for="eq-image-file" id="eq-upload-label" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.55rem 1.1rem;background:var(--brown);color:var(--cream);border-radius:var(--radius);font-size:0.875rem;font-weight:600;cursor:pointer;width:fit-content;transition:background 0.2s;">
+              <span>📁</span> <span id="eq-upload-label-text">Choose Image File</span>
+            </label>
+            <input type="file" id="eq-image-file" accept="image/*" style="display:none;">
+            <input type="hidden" id="eq-image" value="">
+            <div id="eq-image-preview" style="display:none;margin-top:0.25rem;position:relative;width:fit-content;">
+              <img id="eq-image-preview-img" src="" alt="Preview" style="max-height:130px;max-width:220px;border-radius:4px;border:1px solid var(--border);object-fit:cover;display:block;">
+              <button type="button" onclick="clearEqImage()" title="Remove image" style="position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--rust);color:#fff;border:none;font-size:0.8rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">×</button>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" id="eq-editing-id" value="">
+        <button class="btn-primary" id="eq-add-btn" onclick="addEquipment()" style="padding:0.6rem 1.5rem;font-size:0.875rem;">Add Equipment →</button>
+      </div>
+
+      <!-- EQUIPMENT TABLE -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price/Day</th>
+              <th>Status</th>
+              <th>Availability Calendar</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-equipment-body">
+            <tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">📷</div><h3>Loading equipment...</h3></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div><!-- /.admin-tabs-body -->
+
+  </div>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">Booking Details</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="delete-modal" style="z-index:600;">
+  <div class="modal" style="max-width:400px;text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🗑️</div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:0.5rem;color:var(--brown);">Delete Booking?</h3>
+    <p style="font-size:0.875rem;color:var(--mid);margin-bottom:0.25rem;">You are about to permanently delete the booking for:</p>
+    <p style="font-size:1rem;font-weight:700;color:var(--rust);margin-bottom:1.25rem;" id="delete-modal-name">—</p>
+    <p style="font-size:0.8125rem;color:var(--mid);margin-bottom:1.5rem;line-height:1.6;">This will remove the booking and all associated images from Firebase. <strong>This cannot be undone.</strong></p>
+    <div style="display:flex;gap:0.75rem;justify-content:center;">
+      <button onclick="closeDeleteModal()" style="background:transparent;color:var(--brown);padding:0.65rem 1.5rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.875rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;">Cancel</button>
+      <button id="delete-modal-confirm-btn" onclick="confirmDeleteBooking()" style="background:var(--rust);color:var(--white);padding:0.65rem 1.5rem;border:none;border-radius:var(--radius);font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Yes, Delete Permanently</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, get, set, onValue, update, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAdLvJ4uTnxiyRhbTRYoq0sG0m607991Fo",
+  authDomain: "bohol-digirent.firebaseapp.com",
+  databaseURL: "https://bohol-digirent-default-rtdb.firebaseio.com",
+  projectId: "bohol-digirent",
+  storageBucket: "bohol-digirent.firebasestorage.app",
+  messagingSenderId: "279009809952",
+  appId: "1:279009809952:web:9b806ef7115b656865ce45",
+  measurementId: "G-8X0TDLQ1HQ"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+
+// ─── ADMIN AUTH (Firebase Authentication) ────────────────────────────────
+window.adminLogin = async function() {
+  const btn = document.querySelector('#admin-gate .form-submit');
+  const errEl = document.getElementById("admin-pw-err");
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  errEl.style.display = "none";
+  const email = document.getElementById("admin-user").value.trim();
+  const pw    = document.getElementById("admin-pw").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, pw);
+    // onAuthStateChanged below handles showing the dashboard
+  } catch(e) {
+    errEl.style.display = "block";
+    errEl.textContent = "⚠ Incorrect username or password.";
+    btn.textContent = 'Login →'; btn.disabled = false;
+  }
+};
+
+window.adminLogout = function() {
+  signOut(auth);
+  document.getElementById("admin-user").value = "";
+  document.getElementById("admin-pw").value = "";
+};
+
+// ─── AUTO-LOGOUT ON PAGE EXIT / TAB HIDDEN ───────────────────────────────
+// Signs out immediately whenever the admin navigates away, closes the tab,
+// or switches to another tab — so no session is left open.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    signOut(auth);
+  }
+});
+window.addEventListener('pagehide', () => {
+  signOut(auth);
+});
+
+// Auth state listener — single source of truth for showing/hiding dashboard
+// Keep track of Firebase listener unsubscribe functions so we can detach on logout
+let _unsubEquip = null;
+let _unsubBookings = null;
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById("admin-gate").style.display = "none";
+    document.getElementById("admin-content").classList.add("active");
+    document.getElementById("admin-username-display").textContent = user.email;
+    const btn = document.querySelector('#admin-gate .form-submit');
+    if (btn) { btn.textContent = 'Login →'; btn.disabled = false; }
+    migrateOldBookingImages();
+
+    // ── Attach real-time listeners only after authentication ──────────────
+    if (!_unsubEquip) {
+      _unsubEquip = onValue(equipRef, (snap) => {
+        allEquipment = [];
+        if (snap.exists()) {
+          snap.forEach(child => {
+            allEquipment.push({ id: child.key, ...child.val() });
+          });
+        }
+        renderAdminEquipment();
+      });
+    }
+
+    if (!_unsubBookings) {
+      _unsubBookings = onValue(bookRef, (snap) => {
+        allBookings = [];
+        if (snap.exists()) {
+          snap.forEach(child => {
+            const val = child.val();
+            const { idImage1, idImage2, proofImage, receiptImage, ...meta } = val;
+            allBookings.push({ id: child.key, ...meta });
+          });
+        }
+        allBookings.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        renderBookings();
+        refreshAllEqCals();
+      });
+    }
+
+  } else {
+    // Detach listeners on logout to avoid permission errors
+    if (_unsubEquip)    { _unsubEquip();    _unsubEquip    = null; }
+    if (_unsubBookings) { _unsubBookings(); _unsubBookings = null; }
+    document.getElementById("admin-gate").style.display = "flex";
+    document.getElementById("admin-content").classList.remove("active");
+  }
+});
+
+// ─── MIGRATE OLD BASE64 IMAGES → booking_images node ─────────────────────
+async function migrateOldBookingImages() {
+  try {
+    const snap = await get(ref(db, 'bookings'));
+    if (!snap.exists()) return;
+    let migrated = 0;
+    const imageFields = ['idImage1','idImage2','proofImage','receiptImage'];
+    for (const child of Object.entries(snap.val() || {})) {
+      const [id, val] = child;
+      const hasBase64 = imageFields.some(f => val[f] && val[f].startsWith('data:image'));
+      if (!hasBase64) continue;
+      const imgData = {};
+      const nullOut = {};
+      imageFields.forEach(f => {
+        imgData[f] = val[f] && val[f].startsWith('data:image') ? val[f] : (val[f] || '');
+        nullOut[f] = null;
+      });
+      await update(ref(db, `booking_images/${id}`), imgData);
+      await update(ref(db, `bookings/${id}`), nullOut);
+      migrated++;
+    }
+    if (migrated > 0) {
+      console.log(`[BDR] Migrated ${migrated} bookings: images moved to /booking_images`);
+      toast(`Migrated ${migrated} old booking(s) — images moved to proper storage.`, 'success');
+    }
+  } catch(e) {
+    console.warn('[BDR] Migration error:', e.message);
+  }
+}
+
+window.changeAdminPassword = async function() {
+  const current = document.getElementById("pw-current").value;
+  const newPw   = document.getElementById("pw-new").value;
+  const confirm = document.getElementById("pw-confirm").value;
+  let valid = true;
+  ["pw-current-err","pw-new-err","pw-confirm-err"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = "none"; el.classList.remove("show"); }
+  });
+  if (!current) {
+    const el = document.getElementById("pw-current-err");
+    el.textContent = "⚠ Please enter your current password.";
+    el.style.display = "block"; el.classList.add("show"); valid = false;
+  }
+  if (newPw.length < 6) {
+    const el = document.getElementById("pw-new-err");
+    el.style.display = "block"; el.classList.add("show"); valid = false;
+  }
+  if (newPw !== confirm) {
+    const el = document.getElementById("pw-confirm-err");
+    el.style.display = "block"; el.classList.add("show"); valid = false;
+  }
+  if (!valid) return;
+  try {
+    const user = auth.currentUser;
+    if (!user) { toast("Not logged in.", "error"); return; }
+    // Re-authenticate first, then update password
+    const credential = EmailAuthProvider.credential(user.email, current);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPw);
+    ["pw-current","pw-new","pw-confirm"].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = "";
+    });
+    toast("Password updated successfully! Use the new password next time you log in.", "success");
+  } catch(e) {
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
+      const el = document.getElementById("pw-current-err");
+      el.textContent = "⚠ Current password is incorrect.";
+      el.style.display = "block"; el.classList.add("show");
+    } else {
+      toast("Error updating password: " + (e.message || "Try again."), "error");
+    }
+  }
+};
+
+// ─── ADMIN TABS ──────────────────────────────────────────────────────────
+window.switchAdminTab = function(tabId, btn) {
+  document.querySelectorAll(".admin-tab").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".admin-tab-content").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(tabId).classList.add("active");
+};
+
+// ─── DATA STATE ──────────────────────────────────────────────────────────
+let allEquipment = [];
+let allBookings = [];
+let currentStatusFilter = 'all';
+
+const equipRef = ref(db, 'equipment');
+const bookRef  = ref(db, 'bookings');
+
+// ─── SYNC AVAILABILITY (public calendar node — no personal data) ──────────
+// Called whenever a booking status changes or a booking is deleted.
+// Writes only { start, end, status } per booking under /availability/{equipmentId}/{bookingId}
+const BLOCKED_AVAIL_STATUSES = ['pending', 'confirmed', 'renting', 'active'];
+
+async function syncAvailability(bookingId, bookingData, isDelete = false) {
+  try {
+    const eqId = bookingData?.equipmentId;
+    if (!eqId) return;
+    const availPath = ref(db, `availability/${eqId}/${bookingId}`);
+    if (isDelete || !BLOCKED_AVAIL_STATUSES.includes(bookingData?.status)) {
+      // Remove from public availability (returned, cancelled, deleted, etc.)
+      await remove(availPath);
+    } else {
+      // Write only safe date/status info — no personal data
+      await update(availPath, {
+        start:  bookingData.startDate  || '',
+        end:    bookingData.endDate    || '',
+        status: bookingData.status     || 'pending',
+      });
+    }
+  } catch(e) {
+    console.warn('[BDR] syncAvailability error:', e.message);
+  }
+}
+
+// ─── ONE-TIME MIGRATION: copy existing bookings → /availability ───────────
+window.migrateToAvailability = async function() {
+  const btn = document.getElementById('migrate-avail-btn');
+  const result = document.getElementById('migrate-avail-result');
+  btn.textContent = 'Syncing…'; btn.disabled = true;
+  result.style.display = 'none';
+  try {
+    const snap = await get(ref(db, 'bookings'));
+    if (!snap.exists()) {
+      result.style.display = 'block';
+      result.style.color = 'var(--mid)';
+      result.textContent = 'No bookings found in database.';
+      return;
+    }
+    let synced = 0, skipped = 0, fixed = 0;
+    for (const [id, val] of Object.entries(snap.val() || {})) {
+      if (!val.startDate || !val.endDate) { skipped++; continue; }
+      if (!BLOCKED_AVAIL_STATUSES.includes(val.status)) { skipped++; continue; }
+
+      // Resolve the correct current equipment ID
+      let eqId = val.equipmentId;
+
+      // Check if this eqId still exists in current equipment list
+      const eqExists = allEquipment.some(e => e.id === eqId);
+      if (!eqExists && val.equipment) {
+        // Try to find by name (handles re-added equipment with new Firebase key)
+        const match = allEquipment.find(e =>
+          e.name.toLowerCase().trim() === val.equipment.toLowerCase().trim()
+        );
+        if (match) {
+          // Also update the booking's equipmentId to the correct current ID
+          await update(ref(db, `bookings/${id}`), { equipmentId: match.id });
+          eqId = match.id;
+          fixed++;
+        }
+      }
+
+      if (!eqId) { skipped++; continue; }
+
+      await update(ref(db, `availability/${eqId}/${id}`), {
+        start:  val.startDate,
+        end:    val.endDate,
+        status: val.status,
+      });
+      synced++;
+    }
+    result.style.display = 'block';
+    result.style.color = 'var(--forest)';
+    result.textContent = `✓ Done! Synced ${synced} booking(s).${fixed > 0 ? ` Fixed ${fixed} mismatched equipment ID(s).` : ''} ${skipped > 0 ? `${skipped} skipped (inactive or missing data).` : ''}`;
+    toast(`Availability synced — ${synced} booking(s) updated.`, 'success');
+  } catch(e) {
+    result.style.display = 'block';
+    result.style.color = 'var(--rust)';
+    result.textContent = '⚠ Error: ' + (e.message || 'Check Firebase rules.');
+    toast('Sync failed: ' + (e.message || 'Unknown error'), 'error');
+  } finally {
+    btn.textContent = 'Sync Now →'; btn.disabled = false;
+  }
+};
+
+// NOTE: onValue listeners are now registered inside onAuthStateChanged (above)
+// so they only fire after the user is authenticated.
+
+// ─── RENDER ADMIN EQUIPMENT TABLE ────────────────────────────────────────
+function renderAdminEquipment() {
+  const tbody = document.getElementById('admin-equipment-body');
+  if (!tbody) return;
+  if (!allEquipment.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">📷</div><h3>No equipment yet</h3><p>Add equipment above</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = allEquipment.map(eq => `
+    <tr>
+      <td style="width:64px;">
+        ${eq.image
+          ? `<img src="${eq.image}" alt="${eq.name}" style="width:56px;height:48px;object-fit:cover;border-radius:4px;border:1px solid var(--border);">`
+          : `<div style="width:56px;height:48px;background:var(--sand);border-radius:4px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.25rem;">📷</div>`}
+      </td>
+      <td><strong>${eq.name}</strong>${eq.salePrice ? `<span class="badge-sale">SALE</span>` : ''}<br><span style="font-size:0.75rem;color:var(--mid)">${eq.desc ? eq.desc.slice(0,50)+'...' : ''}</span></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;">${eq.category}</span></td>
+      <td style="font-family:'Playfair Display',serif;font-weight:700;">
+        ${eq.salePrice
+          ? `<span style="color:var(--rust);">₱${eq.salePrice.toLocaleString()}</span><span style="font-size:0.75rem;font-weight:400;font-family:'DM Sans',sans-serif;color:var(--mid);text-decoration:line-through;margin-left:0.4rem;">₱${(eq.price||0).toLocaleString()}</span>`
+          : `₱${(eq.price||0).toLocaleString()}`
+        }<span style="font-size:0.75rem;font-weight:400;color:var(--mid);font-family:'DM Sans',sans-serif;">/day</span>
+      </td>
+      <td><span class="status-badge ${eq.available ? 'status-confirmed' : 'status-cancelled'}">${eq.available ? 'Available' : 'Unavailable'}</span></td>
+      <td style="min-width:220px;">
+        <div class="eq-cal-wrap" id="eq-cal-${eq.id}">
+          <div class="eq-cal-header">
+            <button class="eq-cal-nav" onclick="eqCalNav('${eq.id}',-1)">‹</button>
+            <span class="eq-cal-label" id="eq-cal-lbl-${eq.id}"></span>
+            <button class="eq-cal-nav" onclick="eqCalNav('${eq.id}',1)">›</button>
+          </div>
+          <div class="eq-cal-grid" id="eq-cal-grid-${eq.id}"></div>
+          <div class="eq-cal-legend">
+            <span><span class="dot" style="background:#A84432;"></span>Confirmed</span>
+            <span><span class="dot" style="background:#FFF3CD;border:1px solid #856404;"></span>Pending</span>
+            <span><span class="dot" style="background:rgba(44,74,62,0.15);"></span>Available</span>
+          </div>
+        </div>
+      </td>
+      <td>
+        <button class="btn-action" onclick="editEquipment('${eq.id}')">Edit</button>
+        <button class="btn-action" onclick="toggleEquipAvail('${eq.id}',${!eq.available})">${eq.available ? 'Mark Unavail' : 'Mark Avail'}</button>
+        <button class="btn-action danger" onclick="deleteEquipment('${eq.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+
+  // After rendering, draw all equipment calendars
+  allEquipment.forEach(eq => renderEqCal(eq.id));
+}
+
+// ─── EQUIPMENT AVAILABILITY CALENDARS (admin) ────────────────────────────
+const eqCalState = {}; // { [eqId]: { year, month } }
+
+function getEqBookedRanges(equipmentId) {
+  const BLOCKED = ['pending', 'confirmed', 'renting', 'active'];
+  const eqObj  = allEquipment.find(e => e.id === equipmentId);
+  const eqName = eqObj ? (eqObj.name || '').toLowerCase().trim() : '';
+  return allBookings
+    .filter(b => {
+      if (!BLOCKED.includes(b.status)) return false;
+      if (b.equipmentId === equipmentId) return true;
+      if (eqName && b.equipment && b.equipment.toLowerCase().trim() === eqName) return true;
+      return false;
+    })
+    .map(b => ({ start: b.startDate, end: b.endDate, status: b.status }))
+    .filter(r => r.start && r.end);
+}
+
+function renderEqCal(eqId) {
+  if (!eqCalState[eqId]) {
+    const now = new Date();
+    eqCalState[eqId] = { year: now.getFullYear(), month: now.getMonth() };
+  }
+  const { year, month } = eqCalState[eqId];
+  const lbl = document.getElementById(`eq-cal-lbl-${eqId}`);
+  const grid = document.getElementById(`eq-cal-grid-${eqId}`);
+  if (!lbl || !grid) return;
+
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  lbl.textContent = monthNames[month] + ' ' + year;
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const bookedRanges = getEqBookedRanges(eqId);
+  const dayHeaders = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  let html = dayHeaders.map(d => `<div class="ec-hdr">${d}</div>`).join('');
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < firstDay; i++) html += `<div></div>`;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const mm  = String(month + 1).padStart(2, '0');
+    const dd  = String(d).padStart(2, '0');
+    const dateStr = `${year}-${mm}-${dd}`;
+    const match = bookedRanges.find(r => dateStr >= r.start && dateStr <= r.end);
+    const isConfirmed = match && (match.status === 'confirmed' || match.status === 'renting' || match.status === 'active');
+    const isPending   = match && !isConfirmed;
+    const isPast      = dateStr < todayStr;
+    const isToday     = dateStr === todayStr;
+
+    let cls = 'ec-day';
+    let title = dateStr;
+    if (isPast)           cls += ' ec-past';
+    else if (isConfirmed) { cls += ' ec-confirmed'; title += ' — Confirmed'; }
+    else if (isPending)   { cls += ' ec-pending';   title += ' — Pending'; }
+    else                  cls += ' ec-avail';
+    if (isToday)          cls += ' ec-today';
+
+    html += `<div class="${cls}" title="${title}">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+window.eqCalNav = function(eqId, dir) {
+  if (!eqCalState[eqId]) {
+    const now = new Date();
+    eqCalState[eqId] = { year: now.getFullYear(), month: now.getMonth() };
+  }
+  let { year, month } = eqCalState[eqId];
+  month += dir;
+  if (month > 11) { month = 0; year++; }
+  if (month < 0)  { month = 11; year--; }
+  eqCalState[eqId] = { year, month };
+  renderEqCal(eqId);
+};
+
+// Re-render all equipment calendars when bookings update
+function refreshAllEqCals() {
+  allEquipment.forEach(eq => renderEqCal(eq.id));
+}
+
+// ─── ADD / EDIT EQUIPMENT ─────────────────────────────────────────────────
+window.addEquipment = async function() {
+  const name = document.getElementById('eq-name').value.trim();
+  const category = document.getElementById('eq-cat').value;
+  const price = parseFloat(document.getElementById('eq-price').value);
+  const salePriceRaw = document.getElementById('eq-sale-price').value;
+  const salePrice = salePriceRaw !== '' ? parseFloat(salePriceRaw) : null;
+  const available = document.getElementById('eq-avail').value === 'true';
+  const desc = document.getElementById('eq-desc').value.trim();
+  const image = document.getElementById('eq-image').value.trim();
+  if (!name || !price) { toast('Please fill in name and price.', 'error'); return; }
+  const editingId = document.getElementById('eq-editing-id')?.value || '';
+  const payload = { name, category, price, available, desc, image, salePrice: salePrice || null };
+  try {
+    if (editingId) {
+      await update(ref(db, `equipment/${editingId}`), payload);
+      toast('Equipment updated successfully!', 'success');
+      document.getElementById('eq-editing-id').value = '';
+      document.querySelector('.add-eq-form h4').textContent = '➕ Add New Equipment';
+      document.getElementById('eq-add-btn').textContent = 'Add Equipment →';
+    } else {
+      await push(equipRef, payload);
+      toast('Equipment added successfully!', 'success');
+    }
+    document.getElementById('eq-name').value = '';
+    document.getElementById('eq-price').value = '';
+    document.getElementById('eq-sale-price').value = '';
+    document.getElementById('eq-desc').value = '';
+    document.getElementById('eq-image').value = '';
+    document.getElementById('eq-image-file').value = '';
+    document.getElementById('eq-image-preview').style.display = 'none';
+    const _lbl = document.getElementById('eq-upload-label-text');
+    if (_lbl) _lbl.textContent = 'Choose Image File';
+  } catch(e) { toast('Error saving equipment.', 'error'); }
+};
+
+window.editEquipment = function(id) {
+  const eq = allEquipment.find(e => e.id === id);
+  if (!eq) return;
+  document.getElementById('eq-name').value = eq.name;
+  document.getElementById('eq-cat').value = eq.category;
+  document.getElementById('eq-price').value = eq.price;
+  document.getElementById('eq-sale-price').value = eq.salePrice != null ? eq.salePrice : '';
+  document.getElementById('eq-avail').value = eq.available ? 'true' : 'false';
+  document.getElementById('eq-desc').value = eq.desc || '';
+  document.getElementById('eq-image').value = eq.image || '';
+  document.getElementById('eq-image-file').value = '';
+  const preview = document.getElementById('eq-image-preview');
+  const previewImg = document.getElementById('eq-image-preview-img');
+  const labelText = document.getElementById('eq-upload-label-text');
+  if (eq.image) {
+    previewImg.src = eq.image;
+    preview.style.display = 'block';
+    if (labelText) labelText.textContent = 'Image loaded ✓';
+  } else {
+    preview.style.display = 'none';
+    if (labelText) labelText.textContent = 'Choose Image File';
+  }
+  document.getElementById('eq-editing-id').value = id;
+  document.querySelector('.add-eq-form h4').textContent = '✏️ Edit Equipment';
+  document.getElementById('eq-add-btn').textContent = 'Save Changes →';
+  document.querySelector('.add-eq-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+window.toggleEquipAvail = async function(id, avail) {
+  try {
+    await update(ref(db, `equipment/${id}`), { available: avail });
+    toast(`Equipment marked as ${avail ? 'available' : 'unavailable'}.`, 'success');
+  } catch(e) { toast('Error updating equipment.', 'error'); }
+};
+
+window.deleteEquipment = async function(id) {
+  if (!confirm('Delete this equipment? This cannot be undone.')) return;
+  try {
+    await remove(ref(db, `equipment/${id}`));
+    toast('Equipment deleted.', 'success');
+  } catch(e) { toast('Error deleting equipment.', 'error'); }
+};
+
+// ─── LOAD IMAGES INLINE IN BOOKINGS TABLE ────────────────────────────────
+async function loadBookingImagesInline(id) {
+  const cell = document.getElementById(`imgs-${id}`);
+  if (!cell) return;
+  try {
+    let imgs = { idImage1:'', idImage2:'', proofImage:'', receiptImage:'' };
+    const imgSnap = await get(ref(db, `booking_images/${id}`));
+    if (imgSnap.exists()) {
+      imgs = imgSnap.val();
+    } else {
+      const bSnap = await get(ref(db, `bookings/${id}`));
+      if (bSnap.exists()) {
+        const bv = bSnap.val();
+        imgs = { idImage1: bv.idImage1||'', idImage2: bv.idImage2||'', proofImage: bv.proofImage||'', receiptImage: bv.receiptImage||'' };
+      }
+    }
+    const thumbStyle = `width:64px;height:52px;object-fit:cover;border-radius:3px;border:1px solid var(--border);cursor:pointer;`;
+    const wrapStyle = `display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start;`;
+    const makeThumb = (src, label) => src && src !== '__migrated__'
+      ? `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+           <img src="${src}" alt="${label}" title="${label}" style="${thumbStyle}" onclick="window.open('${src}','_blank')">
+           <span style="font-size:0.6rem;color:var(--mid);text-align:center;max-width:64px;line-height:1.2;">${label}</span>
+         </div>`
+      : '';
+    const html = makeThumb(imgs.idImage1,'Primary ID') + makeThumb(imgs.idImage2,'2nd ID') + makeThumb(imgs.proofImage,'Proof of Billing') + makeThumb(imgs.receiptImage,'Receipt');
+    cell.innerHTML = html
+      ? `<div style="${wrapStyle}">${html}</div>`
+      : `<span style="font-size:0.72rem;color:var(--mid);">No images</span>`;
+  } catch(e) {
+    cell.innerHTML = `<span style="font-size:0.72rem;color:var(--mid);">—</span>`;
+  }
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────
+function calcBooking(b) {
+  const days = b.startDate && b.endDate
+    ? Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.startDate)) / 86400000))
+    : null;
+  // Use admin-overridden total if set, otherwise compute from price * days
+  const total = b.customTotal != null ? b.customTotal : (days ? (b.price || 0) * days : 0);
+  return { days, total };
+}
+
+function isOverdue(b) {
+  if (b.status !== 'confirmed' && b.status !== 'renting') return false;
+  if (!b.endDate) return false;
+  const end = new Date(b.endDate);
+  end.setHours(23, 59, 59, 999);
+  return end < new Date();
+}
+
+// ─── RENDER BOOKINGS ─────────────────────────────────────────────────────
+window.renderBookings = function renderBookings() {
+  const tbody = document.getElementById('bookings-body');
+  if (!tbody) return;
+
+  // ── Update summary counts ──────────────────────────────────────────────
+  const counts = { pending: 0, confirmed: 0, renting: 0, returned: 0, cancelled: 0 };
+  let overdueCount = 0;
+  allBookings.forEach(b => {
+    if (counts[b.status] !== undefined) counts[b.status]++;
+    if (isOverdue(b)) overdueCount++;
+  });
+  ['pending','confirmed','renting','returned','cancelled'].forEach(s => {
+    const el = document.getElementById(`count-${s}`);
+    if (el) el.textContent = counts[s];
+    const card = document.getElementById(`summary-${s}`);
+    if (card) card.classList.toggle('active', currentStatusFilter === s);
+  });
+  // Overdue sub-label on the Confirmed card
+  let overdueEl = document.getElementById('overdue-sub');
+  if (!overdueEl) {
+    const confInfo = document.querySelector('#summary-confirmed .summary-info');
+    if (confInfo) {
+      overdueEl = document.createElement('div');
+      overdueEl.id = 'overdue-sub';
+      overdueEl.style.cssText = "font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#7F1D1D;margin-top:0.15rem;";
+      confInfo.appendChild(overdueEl);
+    }
+  }
+  if (overdueEl) overdueEl.textContent = overdueCount > 0 ? `⚠ ${overdueCount} overdue` : '';
+
+  // ── Search ─────────────────────────────────────────────────────────────
+  const q = (document.getElementById('booking-search')?.value || '').toLowerCase().trim();
+  let pool = currentStatusFilter === 'all' ? allBookings : allBookings.filter(b => b.status === currentStatusFilter);
+  if (q) {
+    pool = pool.filter(b => {
+      const id6 = b.id.slice(-6).toLowerCase();
+      return (b.name||'').toLowerCase().includes(q)
+        || (b.email||'').toLowerCase().includes(q)
+        || (b.phone||'').toLowerCase().includes(q)
+        || (b.equipment||'').toLowerCase().includes(q)
+        || id6.includes(q);
+    });
+  }
+
+  const badge = document.getElementById('booking-count-badge');
+  if (badge) badge.textContent = allBookings.length ? `(${pool.length}/${allBookings.length})` : '';
+
+  if (!pool.length) {
+    const msg = allBookings.length === 0 ? 'No bookings yet — waiting for Firebase...'
+      : q ? `No results for "${q}".`
+      : `No bookings with status "${currentStatusFilter}".`;
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><div class="empty-state-icon">&#x1F4CB;</div><h3>${msg}</h3><p>${allBookings.length === 0 ? 'Bookings appear here in real time once submitted.' : 'Try adjusting your search or filter.'}</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = pool.map(b => {
+    const { days, total } = calcBooking(b);
+    const overdue = isOverdue(b);
+    const statusClass = { pending:'status-pending', confirmed:'status-confirmed', renting:'status-renting', returned:'status-returned', cancelled:'status-cancelled' }[b.status] || 'status-pending';
+    const submittedDate = b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' }) : '—';
+    const paid = parseFloat(b.downPayment || 0);
+    const remaining = total - paid;
+    const safeN = (b.name||'unknown').replace(/'/g,"\'");
+    return `
+      <tr class="${overdue ? 'overdue-row' : ''}">
+        <td>
+          <span style="font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:700;">#${b.id.slice(-6).toUpperCase()}</span>
+          <br><span style="font-size:0.7rem;color:var(--mid);">${submittedDate}</span>
+        </td>
+        <td>
+          <strong style="display:block">${b.name || '—'}</strong>
+          <span style="font-size:0.78rem;color:var(--mid)">${b.phone || ''}</span>
+          <br><span style="font-size:0.75rem;color:var(--mid)">${b.email || ''}</span>
+        </td>
+        <td style="font-size:0.875rem">${b.equipment || '—'}</td>
+        <td style="font-size:0.8125rem">
+          ${b.startDate && b.endDate ? `${b.startDate} → ${b.endDate}<br><span style="color:var(--mid)">${days} day${days>1?'s':''}</span>` : '<span style="color:var(--mid)">—</span>'}
+          ${overdue ? `<br><span class="overdue-tag">⚠ Overdue</span>` : ''}
+        </td>
+        <td style="font-family:'Playfair Display',serif;font-weight:700;" id="total-cell-${b.id}">
+          <div style="display:flex;align-items:center;gap:0.35rem;">
+            <span id="total-display-${b.id}">${total ? `\u20B1${total.toLocaleString()}` : '\u2014'}</span>
+            <button onclick="openEditTotal('${b.id}',${total||0})" id="edit-total-btn-${b.id}" title="Edit total" style="background:none;border:1px solid var(--border);color:var(--mid);border-radius:2px;padding:0.1rem 0.35rem;font-size:0.65rem;cursor:pointer;font-family:'DM Sans',sans-serif;line-height:1.4;">\u270F\uFE0F</button>
+          </div>
+          <div id="edit-total-row-${b.id}" style="display:none;margin-top:0.35rem;">
+            <div style="display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;">
+              <span style="font-size:0.78rem;color:var(--mid);">\u20B1</span>
+              <input id="edit-total-input-${b.id}" type="number" min="0" placeholder="${total||0}" style="width:90px;padding:0.25rem 0.4rem;border:1.5px solid var(--amber);border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.8rem;background:var(--white);color:var(--brown);outline:none;" onkeydown="if(event.key==='Enter')saveEditTotal('${b.id}');if(event.key==='Escape')closeEditTotal('${b.id}');">
+              <button onclick="saveEditTotal('${b.id}')" style="background:var(--amber);color:var(--white);border:none;border-radius:2px;padding:0.25rem 0.6rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Save</button>
+              <button onclick="closeEditTotal('${b.id}')" style="background:none;border:1px solid var(--border);color:var(--mid);border-radius:2px;padding:0.25rem 0.5rem;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;">\u2715</button>
+            </div>
+          </div>
+          ${b.downPayment ? `<br><span style="font-size:0.7rem;font-weight:400;font-family:'DM Sans',sans-serif;color:var(--mid)">Paid: \u20B1${paid.toLocaleString()}</span>` : ''}
+          ${remaining > 0 && b.downPayment ? `<br><span style="font-size:0.7rem;font-weight:400;font-family:'DM Sans',sans-serif;color:var(--rust)" id="remaining-display-${b.id}">Bal: \u20B1${remaining.toLocaleString()}</span>` : ''}
+        </td>
+        <td id="imgs-${b.id}" style="min-width:180px;">
+          <span style="font-size:0.72rem;color:var(--mid);">⏳ Loading…</span>
+        </td>
+        <td><span class="status-badge ${overdue ? 'status-overdue' : statusClass}">${overdue ? '⚠ Overdue' : (b.status || 'pending')}</span></td>
+        <td>
+          <div class="action-dropdown" id="dd-${b.id}">
+            <button class="action-dropdown-toggle" onclick="toggleActionDropdown('${b.id}')">
+              Actions <span class="chevron">▼</span>
+            </button>
+            <div class="action-dropdown-menu" id="ddmenu-${b.id}">
+              <button onclick="viewBooking('${b.id}');closeActionDropdown('${b.id}')">👁 View Details</button>
+              <button onclick="showCustomerTxn('${b.id}');closeActionDropdown('${b.id}')">💰 Transactions</button>
+              <div class="action-dropdown-divider"></div>
+              ${b.status==='pending'?`<button class="item-confirm" onclick="updateStatus('${b.id}','confirmed');closeActionDropdown('${b.id}')">✓ Confirm Booking</button>`:''}
+              ${b.status==='confirmed'?`<button class="item-renting" onclick="updateStatus('${b.id}','renting');closeActionDropdown('${b.id}')">▶ Mark as Renting</button>`:''}
+              ${b.status==='renting'?`<button class="item-returned" onclick="updateStatus('${b.id}','returned');closeTxnPanel();closeActionDropdown('${b.id}')">📦 Mark as Returned</button>`:''}
+              ${(b.status==='pending'||b.status==='confirmed'||b.status==='renting')?`<button class="item-cancel" onclick="updateStatus('${b.id}','cancelled');closeActionDropdown('${b.id}')">✕ Cancel Booking</button>`:''}
+              <div class="action-dropdown-divider"></div>
+              <button class="item-danger" onclick="deleteBooking('${b.id}','${safeN}');closeActionDropdown('${b.id}')">🗑 Delete</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  pool.forEach(b => loadBookingImagesInline(b.id));
+}
+
+// ─── CUSTOMER TRANSACTION SUMMARY ────────────────────────────────────────
+window.showCustomerTxn = function(bookingId) {
+  const anchor = allBookings.find(x => x.id === bookingId);
+  if (!anchor) return;
+  const nameKey = (anchor.name || '').trim().toLowerCase();
+  const customerBookings = allBookings.filter(b => {
+    const n = (b.name || '').trim().toLowerCase();
+    if (n !== nameKey) return false;
+    if (anchor.phone && b.phone) return b.phone === anchor.phone;
+    if (anchor.email && b.email) return b.email === anchor.email;
+    return true;
+  });
+
+  let totalRevenue = 0, totalPaid = 0;
+  const statusCounts = { pending:0, confirmed:0, renting:0, returned:0, cancelled:0, overdue:0 };
+  customerBookings.forEach(b => {
+    const { total } = calcBooking(b);
+    const paid = parseFloat(b.downPayment || 0);
+    totalRevenue += total;
+    totalPaid += paid;
+    if (statusCounts[b.status] !== undefined) statusCounts[b.status]++;
+    if (isOverdue(b)) statusCounts.overdue++;
+  });
+  const totalBalance = Math.max(0, totalRevenue - totalPaid);
+
+  document.getElementById('txn-panel-title').textContent =
+    `Transactions · ${anchor.name || '—'}${anchor.phone ? ' · ' + anchor.phone : ''}`;
+
+  window._txnTotalRevenue = totalRevenue;
+  window._txnAnchorId = bookingId;
+  window._txnCustomerBookings = customerBookings;
+
+  document.getElementById('txn-grid').innerHTML = `
+    <div class="txn-stat"><div class="txn-stat-val">${customerBookings.length}</div><div class="txn-stat-label">Total Bookings</div></div>
+    <div class="txn-stat"><div class="txn-stat-val" style="color:var(--forest)" id="txn-total-display">₱${totalRevenue.toLocaleString()}</div><div class="txn-stat-label">Total Value</div></div>
+    <div class="txn-stat" id="txn-paid-card">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div class="txn-stat-val" style="color:var(--amber)" id="txn-paid-display">₱${totalPaid.toLocaleString()}</div>
+        <button id="txn-edit-btn" onclick="openEditPaid(${totalPaid})" style="background:none;border:1px solid var(--border);color:var(--mid);border-radius:2px;padding:0.15rem 0.45rem;font-size:0.68rem;cursor:pointer;font-family:'DM Sans',sans-serif;line-height:1.4;">✏️ Edit</button>
+      </div>
+      <div id="txn-paid-edit-row" style="display:none;margin-top:0.5rem;">
+        <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:0.8rem;color:var(--mid);">₱</span>
+          <input id="txn-paid-input" type="number" min="0" style="width:100px;padding:0.3rem 0.5rem;border:1.5px solid var(--amber);border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.875rem;background:var(--white);color:var(--brown);outline:none;" onkeydown="if(event.key==='Enter')saveTxnPaid();if(event.key==='Escape')closeEditPaid();">
+          <button onclick="saveTxnPaid()" style="background:var(--amber);color:var(--white);border:none;border-radius:2px;padding:0.3rem 0.75rem;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Save</button>
+          <button onclick="closeEditPaid()" style="background:none;border:1px solid var(--border);color:var(--mid);border-radius:2px;padding:0.3rem 0.6rem;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;">✕</button>
+        </div>
+      </div>
+      <div class="txn-stat-label">Total Paid</div>
+    </div>
+    <div class="txn-stat"><div class="txn-stat-val" style="color:var(--rust)" id="txn-balance-display">₱${totalBalance.toLocaleString()}</div><div class="txn-stat-label">Outstanding Balance</div></div>
+    ${statusCounts.overdue > 0 ? `<div class="txn-stat" style="border-color:#FCA5A5;background:#FFF5F5"><div class="txn-stat-val" style="color:#7F1D1D">${statusCounts.overdue}</div><div class="txn-stat-label" style="color:#7F1D1D">⚠ Overdue</div></div>` : ''}
+  `;
+
+  document.getElementById('txn-list').innerHTML = `
+    <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:0.5rem;">Booking History</div>
+    ${customerBookings.map(b => {
+      const { days, total } = calcBooking(b);
+      const paid = parseFloat(b.downPayment || 0);
+      const bal = Math.max(0, total - paid);
+      const cls = { pending:'status-pending', confirmed:'status-confirmed', renting:'status-renting', returned:'status-returned', cancelled:'status-cancelled' }[b.status] || 'status-pending';
+      const over = isOverdue(b);
+      const submDate = b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}) : '—';
+      return `<div class="txn-booking-row" id="txn-row-${b.id}">
+        <div>
+          <span style="font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:700">#${b.id.slice(-6).toUpperCase()}</span>
+          ${over ? '<span class="overdue-tag">⚠ Overdue</span>' : ''}
+          <div style="font-size:0.78rem;color:var(--mid);margin-top:0.1rem">${b.equipment || '—'}</div>
+          <div style="font-size:0.74rem;color:var(--mid)">${b.startDate||'?'} → ${b.endDate||'?'} · Booked ${submDate}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <span class="status-badge ${over ? 'status-overdue' : cls}">${over ? 'Overdue' : b.status}</span>
+          <div style="font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;margin-top:0.2rem" id="txn-row-total-${b.id}">₱${total.toLocaleString()}</div>
+          <div style="font-size:0.7rem;color:var(--mid);margin-top:0.15rem;">
+            Paid <span class="row-paid">₱${paid.toLocaleString()}</span>
+            <button id="txn-row-btn-${b.id}" onclick="openEditPaidForBooking('${b.id}',${paid})" style="background:none;border:1px solid var(--border);color:var(--mid);border-radius:2px;padding:0.1rem 0.35rem;font-size:0.62rem;cursor:pointer;font-family:'DM Sans',sans-serif;line-height:1.4;margin-left:0.25rem;">✏️</button>
+            · Bal <span class="row-bal" style="color:${bal>0?'var(--rust)':'var(--forest)'}">₱${bal.toLocaleString()}</span>
+          </div>
+          <div id="txn-row-edit-${b.id}" style="display:none;margin-top:0.35rem;">
+            <div style="display:flex;gap:0.3rem;align-items:center;justify-content:flex-end;flex-wrap:wrap;">
+              <span style="font-size:0.78rem;color:var(--mid);">₱</span>
+              <input id="txn-paid-input-${b.id}" type="number" min="0" placeholder="${paid}" style="width:90px;padding:0.25rem 0.4rem;border:1.5px solid var(--amber);border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.8rem;background:var(--white);color:var(--brown);outline:none;" onkeydown="if(event.key==='Enter')saveTxnPaid();if(event.key==='Escape'){document.getElementById('txn-row-edit-${b.id}').style.display='none';document.getElementById('txn-row-btn-${b.id}').style.display='';}">
+              <button onclick="saveTxnPaid()" style="background:var(--amber);color:var(--white);border:none;border-radius:2px;padding:0.25rem 0.6rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Save</button>
+              <button onclick="document.getElementById('txn-row-edit-${b.id}').style.display='none';document.getElementById('txn-row-btn-${b.id}').style.display='';" style="background:none;border:1px solid var(--border);color:var(--mid);border-radius:2px;padding:0.25rem 0.5rem;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+
+  const panel = document.getElementById('txn-panel');
+  panel.classList.add('active');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+window.closeTxnPanel = function() {
+  document.getElementById('txn-panel').classList.remove('active');
+};
+
+// ─── EDIT TOTAL PAID IN TXN PANEL ────────────────────────────────────────
+window.openEditPaid = function(currentVal) {
+  const editRow = document.getElementById('txn-paid-edit-row');
+  const editBtn = document.getElementById('txn-edit-btn');
+  const input   = document.getElementById('txn-paid-input');
+  if (!editRow) return;
+  input.value = currentVal;
+  editRow.style.display = 'block';
+  editBtn.style.display = 'none';
+  input.focus();
+  input.select();
+};
+
+window.closeEditPaid = function() {
+  const editRow = document.getElementById('txn-paid-edit-row');
+  const editBtn = document.getElementById('txn-edit-btn');
+  if (editRow) editRow.style.display = 'none';
+  if (editBtn) editBtn.style.display = '';
+};
+
+window.saveTxnPaid = async function() {
+  const bookingId = window._txnEditBookingId;
+  if (!bookingId) { toast('No booking selected.', 'error'); return; }
+  const input = document.getElementById('txn-paid-input-' + bookingId);
+  const newPaid = parseFloat(input?.value);
+  if (isNaN(newPaid) || newPaid < 0) { toast('Enter a valid amount.', 'error'); return; }
+  try {
+    await update(ref(db, `bookings/${bookingId}`), { downPayment: newPaid });
+    // Update in-memory record
+    const bookings = window._txnCustomerBookings || [];
+    const rec = bookings.find(b => b.id === bookingId);
+    if (rec) rec.downPayment = newPaid;
+    // Recalculate totals across all customer bookings
+    let totalRevenue = 0, totalPaid = 0;
+    bookings.forEach(b => { const { total } = calcBooking(b); totalRevenue += total; totalPaid += parseFloat(b.downPayment || 0); });
+    const bal = Math.max(0, totalRevenue - totalPaid);
+    window._txnTotalRevenue = totalRevenue;
+    const paidEl = document.getElementById('txn-paid-display');
+    const balEl  = document.getElementById('txn-balance-display');
+    if (paidEl) paidEl.textContent = '\u20b1' + totalPaid.toLocaleString();
+    if (balEl)  balEl.textContent  = '\u20b1' + bal.toLocaleString();
+    // Refresh the specific booking row inline
+    const rowEl = document.getElementById('txn-row-' + bookingId);
+    if (rowEl && rec) {
+      const { total } = calcBooking(rec);
+      const rowBal = Math.max(0, total - newPaid);
+      const paidSpan = rowEl.querySelector('.row-paid');
+      const balSpan  = rowEl.querySelector('.row-bal');
+      if (paidSpan) paidSpan.textContent = '\u20b1' + newPaid.toLocaleString();
+      if (balSpan)  balSpan.textContent  = '\u20b1' + rowBal.toLocaleString();
+      const editRowEl = document.getElementById('txn-row-edit-' + bookingId);
+      if (editRowEl) editRowEl.style.display = 'none';
+      const editBtnEl = document.getElementById('txn-row-btn-' + bookingId);
+      if (editBtnEl) editBtnEl.style.display = '';
+    }
+    closeEditPaid();
+    toast('Down payment updated for booking #' + bookingId.slice(-6).toUpperCase() + '.', 'success');
+  } catch(e) {
+    toast('Error saving. Check Firebase rules.', 'error');
+  }
+};
+
+window.openEditPaidForBooking = function(bookingId, currentVal) {
+  window._txnEditBookingId = bookingId;
+  // Hide any other open inline edit rows first
+  document.querySelectorAll('[id^="txn-row-edit-"]').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('[id^="txn-row-btn-"]').forEach(el => el.style.display = '');
+  // Show this booking's inline edit
+  const editRowEl = document.getElementById('txn-row-edit-' + bookingId);
+  const editBtnEl = document.getElementById('txn-row-btn-' + bookingId);
+  if (editRowEl) editRowEl.style.display = 'block';
+  if (editBtnEl) editBtnEl.style.display = 'none';
+  // Put value in shared input (reuse txn-paid-input)
+  const input = document.getElementById('txn-paid-input-' + bookingId);
+  if (input) { input.value = currentVal; input.focus(); input.select(); }
+};
+
+
+// ─── SET STATUS FILTER (used by summary cards) ───────────────────────────
+window.setStatusFilter = function(status) {
+  currentStatusFilter = currentStatusFilter === status ? 'all' : status;
+  document.querySelectorAll('[data-status]').forEach(b => {
+    b.classList.toggle('active', b.dataset.status === currentStatusFilter);
+  });
+  renderBookings();
+};
+
+// ─── STATUS FILTER ────────────────────────────────────────────────────────
+document.getElementById('tab-bookings').addEventListener('click', e => {
+  const btn = e.target.closest('[data-status]');
+  if (!btn) return;
+  document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentStatusFilter = btn.dataset.status;
+  // Sync summary card highlights
+  ['pending','confirmed','renting','returned','cancelled'].forEach(s => {
+    const card = document.getElementById(`summary-${s}`);
+    if (card) card.classList.toggle('active', currentStatusFilter === s);
+  });
+  renderBookings();
+});
+
+// ─── BOOKING ACTIONS ──────────────────────────────────────────────────────
+window.updateStatus = async (id, status) => {
+  const user = auth.currentUser;
+  if (!user) {
+    toast('Session expired. Please log in again.', 'error');
+    signOut(auth);
+    return;
+  }
+  try {
+    await update(ref(db, `bookings/${id}`), { status });
+    // Sync the public availability node with the new status
+    const booking = allBookings.find(b => b.id === id);
+    if (booking) await syncAvailability(id, { ...booking, status });
+    // If marked as returned, increment the global rentals completed counter
+    if (status === 'returned') {
+      const statsRef = ref(db, 'stats/rentalsCompleted');
+      const snap = await get(statsRef);
+      const current = snap.exists() ? (snap.val() || 0) : 0;
+      await update(ref(db, 'stats'), { rentalsCompleted: current + 1 });
+    }
+    // Send confirmation email when booking is confirmed
+    if (status === 'confirmed' && booking && booking.email) {
+      try {
+        await emailjs.send('service_lp7yt8n', 'template_j2khy88', {
+          name:           booking.name || '',
+          customer_name:  booking.name || '',
+          booking_id:     'BDR-' + id,
+          equipment:      booking.equipment || '',
+          start_date:     booking.startDate || '',
+          end_date:       booking.endDate || '',
+          price:          booking.price ? '₱' + Number(booking.price).toLocaleString() : '—',
+          pay_method:     booking.payMethod || '—',
+          receive_method: booking.receiveMethod || '—',
+          return_method:  booking.returnMethod || '—',
+          notes:          booking.notes || '—',
+          to_email:       booking.email
+        });
+        toast('Booking confirmed & email sent to ' + booking.email, 'success');
+      } catch (emailErr) {
+        console.warn('Confirmation email failed:', emailErr.text || emailErr.status || emailErr);
+        toast('Booking confirmed but email failed to send.', 'error');
+      }
+    } else {
+      toast(`Booking marked as ${status}.`, 'success');
+    }
+  } catch(e) {
+    console.error('updateStatus error:', e);
+    if (e.code === 'PERMISSION_DENIED' || (e.message && e.message.includes('PERMISSION_DENIED'))) {
+      toast('Permission denied — check your Firebase Database Rules allow authenticated writes to /bookings.', 'error');
+    } else {
+      toast('Could not update status: ' + (e.message || 'Unknown error.'), 'error');
+    }
+  }
+};
+window.cancelBooking = async (id) => {
+  if (!confirm('Cancel this booking?')) return;
+  await window.updateStatus(id, 'cancelled');
+};
+
+// ─── DELETE BOOKING ───────────────────────────────────────────────────────
+let _pendingDeleteId = null;
+window.deleteBooking = (id, name) => {
+  _pendingDeleteId = id;
+  document.getElementById('delete-modal-name').textContent = name || `Booking #${id.slice(-6).toUpperCase()}`;
+  document.getElementById('delete-modal').classList.add('active');
+};
+window.closeDeleteModal = () => {
+  _pendingDeleteId = null;
+  document.getElementById('delete-modal').classList.remove('active');
+  const btn = document.getElementById('delete-modal-confirm-btn');
+  btn.textContent = 'Yes, Delete Permanently';
+  btn.disabled = false;
+};
+window.confirmDeleteBooking = async () => {
+  if (!_pendingDeleteId) return;
+  const id = _pendingDeleteId;
+  const btn = document.getElementById('delete-modal-confirm-btn');
+  btn.textContent = 'Deleting…'; btn.disabled = true;
+  try {
+    const booking = allBookings.find(b => b.id === id);
+    await remove(ref(db, `bookings/${id}`));
+    await remove(ref(db, `booking_images/${id}`));
+    // Remove from public availability node
+    if (booking?.equipmentId) await remove(ref(db, `availability/${booking.equipmentId}/${id}`));
+    toast('Booking permanently deleted.', 'success');
+    closeDeleteModal();
+  } catch(e) {
+    toast('Error deleting booking: ' + (e.message || 'Check Firebase rules.'), 'error');
+    const btn = document.getElementById('delete-modal-confirm-btn');
+    btn.textContent = 'Yes, Delete Permanently'; btn.disabled = false;
+  }
+};
+document.getElementById('delete-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('delete-modal')) closeDeleteModal();
+});
+
+// ─── CHANGE USERNAME ──────────────────────────────────────────────────────
+// changeAdminUsername removed — managed via Firebase Console
+
+// ─── VIEW BOOKING DETAIL ──────────────────────────────────────────────────
+window.viewBooking = async (id) => {
+  const b = allBookings.find(x => x.id === id);
+  if (!b) return;
+  const days = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.startDate)) / 86400000));
+  const total = (b.price || 0) * days;
+  document.getElementById('modal-title').textContent = `Booking #${id.slice(-6).toUpperCase()}`;
+  _renderModalBody(b, days, total, null);
+  document.getElementById('detail-modal').classList.add('active');
+  try {
+    let imgs = { idImage1:'', idImage2:'', proofImage:'', receiptImage:'' };
+    const imgSnap = await get(ref(db, `booking_images/${id}`));
+    if (imgSnap.exists()) {
+      imgs = imgSnap.val();
+    } else {
+      const bSnap = await get(ref(db, `bookings/${id}`));
+      if (bSnap.exists()) {
+        const bv = bSnap.val();
+        imgs = { idImage1: bv.idImage1||'', idImage2: bv.idImage2||'', proofImage: bv.proofImage||'', receiptImage: bv.receiptImage||'' };
+      }
+    }
+    _renderModalBody(b, days, total, imgs);
+  } catch(e) {
+    console.warn('Could not load images:', e);
+  }
+};
+
+function _renderModalBody(b, days, total, imgs) {
+  const id = b.id;
+  const imgSection = imgs ? `
+    ${imgs.idImage1 && imgs.idImage1 !== '__migrated__' ? `<div style="grid-column:1/-1"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Primary ID Photo</span><br><img src="${imgs.idImage1}" style="margin-top:0.4rem;max-width:100%;max-height:220px;border-radius:4px;border:1px solid var(--border);object-fit:contain;"></div>` : ''}
+    ${imgs.idImage2 && imgs.idImage2 !== '__migrated__' ? `<div style="grid-column:1/-1"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Second ID Photo</span><br><img src="${imgs.idImage2}" style="margin-top:0.4rem;max-width:100%;max-height:220px;border-radius:4px;border:1px solid var(--border);object-fit:contain;"></div>` : ''}
+    ${imgs.proofImage && imgs.proofImage !== '__migrated__' ? `<div style="grid-column:1/-1"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Proof of Billing</span><br><img src="${imgs.proofImage}" style="margin-top:0.4rem;max-width:100%;max-height:220px;border-radius:4px;border:1px solid var(--border);object-fit:contain;"></div>` : ''}
+    ${imgs.receiptImage && imgs.receiptImage !== '__migrated__' ? `<div style="grid-column:1/-1"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Payment Receipt</span><br><img src="${imgs.receiptImage}" style="margin-top:0.4rem;max-width:100%;max-height:280px;border-radius:4px;border:1px solid var(--border);object-fit:contain;"></div>` : ''}
+  ` : `<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--mid);font-size:0.85rem;">⏳ Loading images...</div>`;
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="display:grid;gap:0.875rem;font-size:0.9375rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;">
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Customer</span><br><strong>${b.name}</strong>${b.age ? ` (Age: ${b.age})` : ''}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Status</span><br><span class="status-badge status-${b.status}">${b.status}</span></div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Email</span><br>${b.email || '—'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Phone</span><br>${b.phone || '—'}</div>
+        ${b.facebook ? `<div style="grid-column:1/-1"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Facebook</span><br><a href="${b.facebook}" target="_blank" style="color:var(--amber)">${b.facebook}</a></div>` : ''}
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Equipment</span><br><strong>${b.equipment || '—'}</strong></div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Purpose</span><br>${b.purpose || '—'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Rental Dates</span><br>${b.startDate} → ${b.endDate} (${days} day${days>1?'s':''})</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Pickup Time</span><br>${b.pickupTime || '—'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Via Plane</span><br>${b.plane === 'yes' ? '✈️ Yes' : '🚗 No'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">SD Card</span><br>${b.sdCard === 'yes' ? '💾 Has own' : '❌ No'}</div>
+        <div style="${b.receiveMethod === 'delivery' && b.deliveryAddress ? 'grid-column:1/-1' : ''}"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Receive</span><br>${b.receiveMethod === 'delivery' ? `🚚 Delivery${b.deliveryAddress ? `<br><span style="font-size:0.8rem;color:var(--mid);margin-top:0.2rem;display:block;">📍 ${b.deliveryAddress}</span>` : ''}` : '🏛️ Pick Up'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Return</span><br>${b.returnMethod === 'meetup' ? '🤝 Brgy Hall' : '🚚 Deliver Back'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Payment</span><br>${b.payMethod?.toUpperCase() || '—'} · ${b.txnRef || '—'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Down Payment</span><br>₱${parseFloat(b.downPayment||0).toLocaleString()}</div>
+      </div>
+      <div style="padding:1rem;background:var(--cream);border-radius:2px;border:1px solid var(--border)">
+        <strong>Estimated Total: ₱${total.toLocaleString()}</strong>
+        <span style="color:var(--mid);font-size:0.875rem"> (${days} day${days>1?'s':''} × ₱${(b.price||0).toLocaleString()}/day)</span>
+      </div>
+      ${b.address ? `<div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Address</span><br><p style="margin-top:0.2rem;color:var(--mid)">${b.address}</p></div>` : ''}
+      ${b.notes ? `<div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Notes</span><br><p style="margin-top:0.2rem;color:var(--mid)">${b.notes}</p></div>` : ''}
+      ${imgSection}
+      <div style="font-size:0.75rem;color:var(--mid)">Submitted: ${b.createdAt ? new Date(b.createdAt).toLocaleString('en-PH') : '—'}</div>
+    </div>
+  `;
+};
+
+window.closeModal = () => document.getElementById('detail-modal').classList.remove('active');
+document.getElementById('detail-modal').addEventListener('click', e => { if (e.target === document.getElementById('detail-modal')) closeModal(); });
+
+// ─── EQUIPMENT IMAGE UPLOAD ──────────────────────────────────────────────
+const eqFileInput = document.getElementById('eq-image-file');
+if (eqFileInput) {
+  eqFileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast('Image too large — please choose a file under 2 MB.', 'error');
+      this.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const dataUrl = e.target.result;
+      document.getElementById('eq-image').value = dataUrl;
+      const preview = document.getElementById('eq-image-preview');
+      const previewImg = document.getElementById('eq-image-preview-img');
+      previewImg.src = dataUrl;
+      preview.style.display = 'block';
+      const labelText = document.getElementById('eq-upload-label-text');
+      if (labelText) labelText.textContent = file.name.length > 24 ? file.name.slice(0,22)+'…' : file.name;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+window.clearEqImage = function() {
+  document.getElementById('eq-image').value = '';
+  document.getElementById('eq-image-file').value = '';
+  document.getElementById('eq-image-preview').style.display = 'none';
+  const labelText = document.getElementById('eq-upload-label-text');
+  if (labelText) labelText.textContent = 'Choose Image File';
+};
+
+// ─── TOAST ────────────────────────────────────────────────────────────────
+window.toast = (msg, type = 'success') => {
+  const c = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${type === 'success' ? '✓' : '⚠'}</span> ${msg}`;
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 4500);
+};
+
+
+// ─── ADMIN NOTEPAD ────────────────────────────────────────────────────────
+const NOTES_KEY = 'bdr_admin_notes';
+
+function loadNotes() {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveNotes(notes) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+function renderNotes() {
+  const notes = loadNotes();
+  const list = document.getElementById('notes-list');
+  if (!list) return;
+  if (!notes.length) {
+    list.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--mid);font-size:0.875rem;">📝 No notes yet. Add your first note above.</div>`;
+    return;
+  }
+  list.innerHTML = notes.map((n, i) => `
+    <div class="note-card note-card--${n.color || 'cream'}">
+      <button class="note-card-delete" title="Delete note" onclick="deleteAdminNote(${notes.length - 1 - i})">✕</button>
+      ${n.title ? `<div class="note-card-title">${n.title}</div>` : ''}
+      <div class="note-card-body">${n.content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      <div class="note-card-meta">Added ${new Date(n.createdAt).toLocaleString('en-PH', {dateStyle:'medium',timeStyle:'short'})}</div>
+    </div>
+  `).reverse().join(''); // newest first
+}
+
+window.addAdminNote = function() {
+  const content = document.getElementById('note-content')?.value?.trim();
+  if (!content) { toast('Please enter a note.', 'error'); return; }
+  const title = document.getElementById('note-title')?.value?.trim();
+  const color = document.getElementById('note-color')?.value || 'cream';
+  const notes = loadNotes();
+  notes.push({ title, content, color, createdAt: Date.now() });
+  saveNotes(notes);
+  document.getElementById('note-content').value = '';
+  document.getElementById('note-title').value = '';
+  renderNotes();
+  toast('Note saved!');
+};
+
+window.deleteAdminNote = function(idx) {
+  const notes = loadNotes();
+  if (!confirm('Delete this note? This cannot be undone.')) return;
+  notes.splice(idx, 1);
+  saveNotes(notes);
+  renderNotes();
+  toast('Note deleted.');
+};
+
+// Render notes when notepad tab is opened
+const _origSwitch = window.switchAdminTab;
+window.switchAdminTab = function(tabId, btn) {
+  _origSwitch(tabId, btn);
+  if (tabId === 'tab-notepad') renderNotes();
+  if (tabId === 'tab-settings') loadPromoImage();
+};
+
+// ─── ACTION DROPDOWN ─────────────────────────────────────────────────────
+window.toggleActionDropdown = function(id) {
+  const toggle = document.querySelector(`#dd-${id} .action-dropdown-toggle`);
+  const menu   = document.getElementById(`ddmenu-${id}`);
+  const isOpen = menu.classList.contains('open');
+  // Close all others first
+  document.querySelectorAll('.action-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.action-dropdown-toggle.open').forEach(t => t.classList.remove('open'));
+  if (!isOpen) {
+    const rect = toggle.getBoundingClientRect();
+    menu.style.top  = (rect.bottom + 4) + 'px';
+    menu.style.left = 'auto';
+    menu.style.right = (window.innerWidth - rect.right) + 'px';
+    menu.classList.add('open');
+    toggle.classList.add('open');
+  }
+};
+window.closeActionDropdown = function(id) {
+  document.getElementById(`ddmenu-${id}`)?.classList.remove('open');
+  document.querySelector(`#dd-${id} .action-dropdown-toggle`)?.classList.remove('open');
+};
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.action-dropdown')) {
+    document.querySelectorAll('.action-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.action-dropdown-toggle.open').forEach(t => t.classList.remove('open'));
+  }
+});
+
+
+
+// ─── EDIT TOTAL (booking row inline) ─────────────────────────────────────
+window.openEditTotal = function(id, currentTotal) {
+  document.getElementById('edit-total-row-' + id).style.display = 'block';
+  document.getElementById('edit-total-btn-' + id).style.display = 'none';
+  const inp = document.getElementById('edit-total-input-' + id);
+  inp.value = currentTotal || '';
+  inp.focus();
+};
+
+window.closeEditTotal = function(id) {
+  document.getElementById('edit-total-row-' + id).style.display = 'none';
+  document.getElementById('edit-total-btn-' + id).style.display = '';
+};
+
+window.saveEditTotal = async function(id) {
+  const inp = document.getElementById('edit-total-input-' + id);
+  const newTotal = parseFloat(inp.value);
+  if (isNaN(newTotal) || newTotal < 0) { toast('Please enter a valid total amount.', 'error'); return; }
+  try {
+    await update(ref(db, 'bookings/' + id), { customTotal: newTotal });
+    // Update main bookings table row display
+    const displayEl = document.getElementById('total-display-' + id);
+    if (displayEl) displayEl.textContent = '\u20B1' + newTotal.toLocaleString();
+    const b = allBookings.find(x => x.id === id);
+    if (b) {
+      b.customTotal = newTotal;
+      const paid = parseFloat(b.downPayment || 0);
+      const bal = Math.max(0, newTotal - paid);
+      // Update balance in main table
+      const balEl = document.getElementById('remaining-display-' + id);
+      if (balEl) {
+        balEl.textContent = 'Bal: \u20B1' + bal.toLocaleString();
+        balEl.style.color = bal > 0 ? 'var(--rust)' : 'var(--forest)';
+      }
+      // ── Update the transaction panel if it's open for this customer ──────
+      const txnPanel = document.getElementById('txn-panel');
+      if (txnPanel && txnPanel.classList.contains('active') && window._txnCustomerBookings) {
+        const customerBookings = window._txnCustomerBookings;
+        const isThisCustomer = customerBookings.some(cb => cb.id === id);
+        if (isThisCustomer) {
+          // Recalculate panel totals from updated allBookings
+          let newTotalRevenue = 0, newTotalPaid = 0;
+          customerBookings.forEach(cb => {
+            const { total: t } = calcBooking(cb);
+            newTotalRevenue += t;
+            newTotalPaid += parseFloat(cb.downPayment || 0);
+          });
+          const newBalance = Math.max(0, newTotalRevenue - newTotalPaid);
+          // Refresh Total Value card
+          const tvEl = document.getElementById('txn-total-display');
+          if (tvEl) tvEl.textContent = '\u20B1' + newTotalRevenue.toLocaleString();
+          // Refresh Outstanding Balance card
+          const obEl = document.getElementById('txn-balance-display');
+          if (obEl) obEl.textContent = '\u20B1' + newBalance.toLocaleString();
+          // Refresh this booking row total inside the panel
+          const rowTotalEl = document.getElementById('txn-row-total-' + id);
+          if (rowTotalEl) rowTotalEl.textContent = '\u20B1' + newTotal.toLocaleString();
+          // Refresh this booking row balance inside the panel
+          const rowBalEl = document.querySelector('#txn-row-' + id + ' .row-bal');
+          if (rowBalEl) {
+            rowBalEl.textContent = '\u20B1' + bal.toLocaleString();
+            rowBalEl.style.color = bal > 0 ? 'var(--rust)' : 'var(--forest)';
+          }
+        }
+      }
+    }
+    closeEditTotal(id);
+    toast('Total updated successfully!', 'success');
+  } catch(e) { toast('Error updating total: ' + (e.message || ''), 'error'); }
+};
+
+// ─── PROMO / HERO IMAGE ───────────────────────────────────────────────────
+
+// Load existing promo image + title when admin opens the settings tab
+async function loadPromoImage() {
+  try {
+    const imgSnap      = await get(ref(db, 'siteSettings/heroImage'));
+    const titleSnap    = await get(ref(db, 'siteSettings/heroTitle'));
+    const subtitleSnap = await get(ref(db, 'siteSettings/heroSubtitle'));
+    const linkSnap     = await get(ref(db, 'siteSettings/heroLink'));
+    const url      = imgSnap.exists()      ? imgSnap.val()      : '';
+    const title    = titleSnap.exists()    ? titleSnap.val()    : '';
+    const subtitle = subtitleSnap.exists() ? subtitleSnap.val() : '';
+    const link     = linkSnap.exists()     ? linkSnap.val()     : '';
+    if (url)      { document.getElementById('promo-url').value      = url;      previewPromo(url); }
+    if (title)      document.getElementById('promo-title').value    = title;
+    if (subtitle)   document.getElementById('promo-subtitle').value = subtitle;
+    if (link)       document.getElementById('promo-link').value     = link;
+  } catch(e) { console.warn('[BDR] loadPromoImage:', e.message); }
+}
+
+window.previewPromo = function(src) {
+  const wrap = document.getElementById('promo-preview-wrap');
+  const img  = document.getElementById('promo-preview-img');
+  if (src && src.trim()) {
+    img.src = src.trim();
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+};
+
+// File upload → base64 preview
+document.getElementById('promo-file')?.addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    document.getElementById('promo-url').value = dataUrl;
+    previewPromo(dataUrl);
+  };
+  reader.readAsDataURL(file);
+});
+
+window.savePromoImage = async function() {
+  const btn    = document.getElementById('promo-save-btn');
+  const result = document.getElementById('promo-save-result');
+  const url      = document.getElementById('promo-url').value.trim();
+  const title    = (document.getElementById('promo-title').value    || '').trim();
+  const subtitle = (document.getElementById('promo-subtitle').value || '').trim();
+  const link     = (document.getElementById('promo-link').value     || '').trim();
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  result.style.display = 'none';
+  try {
+    // Write each field individually to avoid permission issues on the parent node
+    await set(ref(db, 'siteSettings/heroImage'),    url);
+    await set(ref(db, 'siteSettings/heroTitle'),    title);
+    await set(ref(db, 'siteSettings/heroSubtitle'), subtitle);
+    await set(ref(db, 'siteSettings/heroLink'),     link);
+    result.style.display = 'block';
+    result.style.color = 'var(--forest)';
+    result.textContent = '✓ Saved! Reload the homepage to see the update.';
+    toast('Promo image updated successfully!', 'success');
+  } catch(e) {
+    console.error('[BDR] savePromoImage error:', e);
+    result.style.display = 'block';
+    result.style.color = 'var(--rust)';
+    result.textContent = '⚠ Error: ' + (e.message || 'Check Firebase rules for /settings.');
+    toast('Failed to save promo image: ' + (e.message || 'Check Firebase rules.'), 'error');
+  } finally {
+    btn.textContent = 'Save Promo Image →'; btn.disabled = false;
+  }
+};
+
+window.clearPromoImage = async function() {
+  if (!confirm('Remove the promo image from the homepage?')) return;
+  try {
+    await set(ref(db, 'siteSettings/heroImage'),    '');
+    await set(ref(db, 'siteSettings/heroTitle'),    '');
+    await set(ref(db, 'siteSettings/heroSubtitle'), '');
+    await set(ref(db, 'siteSettings/heroLink'),     '');
+    document.getElementById('promo-url').value      = '';
+    document.getElementById('promo-title').value    = '';
+    document.getElementById('promo-subtitle').value = '';
+    document.getElementById('promo-link').value     = '';
+    document.getElementById('promo-preview-wrap').style.display = 'none';
+    const fileInput = document.getElementById('promo-file');
+    if (fileInput) fileInput.value = '';
+    toast('Promo image removed.', 'success');
+  } catch(e) {
+    toast('Error removing promo image: ' + (e.message || ''), 'error');
+  }
+};
+
+// ─── END PROMO ────────────────────────────────────────────────────────────
+
+// Attached directly in module scope so renderBookings() is in closure
+const _searchEl = document.getElementById('booking-search');
+if (_searchEl) {
+  _searchEl.addEventListener('input', () => renderBookings());
+  _searchEl.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { _searchEl.value = ''; renderBookings(); }
+  });
+}
+// Clear button
+const _searchClear = document.querySelector('.search-clear');
+if (_searchClear) {
+  _searchClear.addEventListener('click', () => { _searchEl.value = ''; renderBookings(); _searchEl.focus(); });
+}
+</script>
+</body>
+</html>
