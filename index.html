@@ -1130,7 +1130,7 @@ function populateEquipmentSelect() {
       const hasConfirmed = ranges.some(r => r.status === 'confirmed' || r.status === 'renting');
       const saleTag = e.salePrice ? ' 🏷 SALE' : '';
       const label = hasConfirmed
-        ? `${e.name} — ₱${activePrice.toLocaleString()}/day${saleTag} ⚠ Some dates booked`
+        ? `${e.name} — ₱${activePrice.toLocaleString()}/day${saleTag}`
         : `${e.name} — ₱${activePrice.toLocaleString()}/day${saleTag}`;
       return `<option value="${e.id}" data-price="${activePrice}">${label}</option>`;
     }).join('');
