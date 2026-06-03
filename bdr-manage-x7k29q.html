@@ -238,7 +238,7 @@
 <!-- LOGIN GATE -->
 <div class="admin-gate" id="admin-gate">
   <div class="admin-login-card">
-    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🔐</div>
+    <div style="font-size:2.5rem;margin-bottom:0.75rem;"></div>
     <h3>Admin Access</h3>
     <p>Enter your credentials to manage bookings and equipment.</p>
     <div class="form-group" style="text-align:left;">
@@ -257,17 +257,17 @@
 <!-- ADMIN CONTENT -->
 <div class="admin-content" id="admin-content">
   <div class="admin-bar">
-    <span>🔐 ADMIN DASHBOARD · <span id="admin-username-display">Bohol DigiRent</span></span>
+    <span> ADMIN DASHBOARD · <span id="admin-username-display">Bohol DigiRent</span></span>
     <button onclick="adminLogout()">Logout</button>
   </div>
   <div class="section section-alt">
 
     <!-- TABS -->
     <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchAdminTab('tab-bookings',this)">📋 Bookings</button>
-      <button class="admin-tab" onclick="switchAdminTab('tab-equipment',this)">📷 Equipment</button>
-      <button class="admin-tab" onclick="switchAdminTab('tab-notepad',this)">📝 Notepad</button>
-      <button class="admin-tab" onclick="switchAdminTab('tab-settings',this)">⚙️ Settings</button>
+      <button class="admin-tab active" onclick="switchAdminTab('tab-bookings',this)"> Bookings</button>
+      <button class="admin-tab" onclick="switchAdminTab('tab-equipment',this)"> Equipment</button>
+      <button class="admin-tab" onclick="switchAdminTab('tab-notepad',this)"> Notepad</button>
+      <button class="admin-tab" onclick="switchAdminTab('tab-settings',this)"> Settings</button>
     </div>
 
     <div class="admin-tabs-body">
@@ -291,35 +291,35 @@
       <!-- STATUS SUMMARY CARDS -->
       <div class="status-summary">
         <div class="summary-card summary-card--pending" onclick="setStatusFilter('pending')" id="summary-pending">
-          <div class="summary-icon">🕐</div>
+          <div class="summary-icon"></div>
           <div class="summary-info">
             <div class="summary-count" id="count-pending">0</div>
             <div class="summary-label">Pending</div>
           </div>
         </div>
         <div class="summary-card summary-card--confirmed" onclick="setStatusFilter('confirmed')" id="summary-confirmed">
-          <div class="summary-icon">✅</div>
+          <div class="summary-icon"></div>
           <div class="summary-info">
             <div class="summary-count" id="count-confirmed">0</div>
             <div class="summary-label">Confirmed</div>
           </div>
         </div>
         <div class="summary-card summary-card--renting" onclick="setStatusFilter('renting')" id="summary-renting">
-          <div class="summary-icon">🎥</div>
+          <div class="summary-icon"></div>
           <div class="summary-info">
             <div class="summary-count" id="count-renting">0</div>
             <div class="summary-label">Renting</div>
           </div>
         </div>
         <div class="summary-card summary-card--returned" onclick="setStatusFilter('returned')" id="summary-returned">
-          <div class="summary-icon">📦</div>
+          <div class="summary-icon"></div>
           <div class="summary-info">
             <div class="summary-count" id="count-returned">0</div>
             <div class="summary-label">Returned</div>
           </div>
         </div>
         <div class="summary-card summary-card--cancelled" onclick="setStatusFilter('cancelled')" id="summary-cancelled">
-          <div class="summary-icon">❌</div>
+          <div class="summary-icon"></div>
           <div class="summary-info">
             <div class="summary-count" id="count-cancelled">0</div>
             <div class="summary-label">Cancelled</div>
@@ -329,7 +329,7 @@
 
       <!-- SEARCH BAR -->
       <div class="search-bar-wrap">
-        <input type="text" id="booking-search" placeholder="🔍  Search by name, email, phone, equipment, booking ID…">
+        <input type="text" id="booking-search" placeholder="  Search by name, email, phone, equipment, booking ID…">
         <button class="search-clear" title="Clear">✕</button>
       </div>
 
@@ -358,7 +358,7 @@
             </tr>
           </thead>
           <tbody id="bookings-body">
-            <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--mid);">⏳ Connecting to Firebase…</td></tr>
+            <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--mid);"> Connecting to Firebase…</td></tr>
           </tbody>
         </table>
       </div>
@@ -413,7 +413,7 @@
 
         <!-- CHANGE PASSWORD via Firebase Auth -->
         <div class="add-eq-form">
-          <h4>🔑 Change Password</h4>
+          <h4> Change Password</h4>
           <p style="font-size:0.8125rem;color:var(--mid);margin-bottom:1.25rem;line-height:1.6;">Update your login password using Firebase Authentication. Takes effect immediately across all devices.</p>
           <div class="form-group">
             <label>Current Password</label>
@@ -434,13 +434,13 @@
         </div>
 
         <div class="add-eq-form" style="margin-top:1.5rem;background:rgba(44,74,62,0.06);border-color:rgba(44,74,62,0.2);">
-          <h4 style="color:var(--forest);">ℹ️ Managing Admin Accounts</h4>
+          <h4 style="color:var(--forest);"> Managing Admin Accounts</h4>
           <p style="font-size:0.8125rem;color:var(--mid);line-height:1.7;">To add or remove admin users, or to reset your email, go to your <a href="https://console.firebase.google.com" target="_blank" style="color:var(--amber);font-weight:600;">Firebase Console</a> → Authentication → Users. Your credentials are stored securely by Firebase — never in this file.</p>
         </div>
 
         <!-- PROMO / HERO IMAGE -->
         <div class="add-eq-form" style="margin-top:1.5rem;background:rgba(200,118,26,0.04);border-color:rgba(200,118,26,0.25);">
-          <h4 style="color:var(--amber);">🖼️ Homepage Promo Image</h4>
+          <h4 style="color:var(--amber);"> Homepage Promo Image</h4>
           <p style="font-size:0.8125rem;color:var(--mid);line-height:1.7;margin-bottom:1rem;">
             Upload an image to display in the hero section of the homepage. Paste a direct image URL below, or upload a file. Leave blank / remove to hide the promo panel.
           </p>
@@ -477,7 +477,7 @@
         </div>
 
         <div class="add-eq-form" style="margin-top:1.5rem;background:rgba(168,68,50,0.04);border-color:rgba(168,68,50,0.2);">
-          <h4 style="color:var(--rust);">🔄 Sync Availability Calendar</h4>
+          <h4 style="color:var(--rust);"> Sync Availability Calendar</h4>
           <p style="font-size:0.8125rem;color:var(--mid);line-height:1.7;margin-bottom:1rem;">Run this once to copy your existing bookings into the public <code style="font-family:'DM Mono',monospace;font-size:0.75rem;background:var(--sand);padding:1px 5px;border-radius:2px;">/availability</code> node. This is needed after the security update so the calendar on the public site shows blocked dates again. Safe to run multiple times.</p>
           <button class="btn-primary" onclick="migrateToAvailability()" id="migrate-avail-btn" style="padding:0.6rem 1.5rem;font-size:0.875rem;background:var(--forest);">Sync Now →</button>
           <div id="migrate-avail-result" style="margin-top:0.75rem;font-size:0.8rem;display:none;"></div>
@@ -538,7 +538,7 @@
           <label>Equipment Image <span style="font-size:0.75rem;color:var(--mid);font-weight:400;">(optional)</span></label>
           <div style="display:flex;flex-direction:column;gap:0.6rem;">
             <label for="eq-image-file" id="eq-upload-label" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.55rem 1.1rem;background:var(--brown);color:var(--cream);border-radius:var(--radius);font-size:0.875rem;font-weight:600;cursor:pointer;width:fit-content;transition:background 0.2s;">
-              <span>📁</span> <span id="eq-upload-label-text">Choose Image File</span>
+              <span></span> <span id="eq-upload-label-text">Choose Image File</span>
             </label>
             <input type="file" id="eq-image-file" accept="image/*" style="display:none;">
             <input type="hidden" id="eq-image" value="">
@@ -591,7 +591,7 @@
 <!-- DELETE CONFIRM MODAL -->
 <div class="modal-overlay" id="delete-modal" style="z-index:600;">
   <div class="modal" style="max-width:400px;text-align:center;">
-    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🗑️</div>
+    <div style="font-size:2.5rem;margin-bottom:0.75rem;"></div>
     <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:0.5rem;color:var(--brown);">Delete Booking?</h3>
     <p style="font-size:0.875rem;color:var(--mid);margin-bottom:0.25rem;">You are about to permanently delete the booking for:</p>
     <p style="font-size:1rem;font-weight:700;color:var(--rust);margin-bottom:1.25rem;" id="delete-modal-name">—</p>
@@ -1263,11 +1263,11 @@ window.renderBookings = function renderBookings() {
             </button>
             <div class="action-dropdown-menu" id="ddmenu-${b.id}">
               <button onclick="viewBooking('${b.id}');closeActionDropdown('${b.id}')">👁 View Details</button>
-              <button onclick="showCustomerTxn('${b.id}');closeActionDropdown('${b.id}')">💰 Transactions</button>
+              <button onclick="showCustomerTxn('${b.id}');closeActionDropdown('${b.id}')"> Transactions</button>
               <div class="action-dropdown-divider"></div>
               ${b.status==='pending'?`<button class="item-confirm" onclick="updateStatus('${b.id}','confirmed');closeActionDropdown('${b.id}')">✓ Confirm Booking</button>`:''}
               ${b.status==='confirmed'?`<button class="item-renting" onclick="updateStatus('${b.id}','renting');closeActionDropdown('${b.id}')">▶ Mark as Renting</button>`:''}
-              ${b.status==='renting'?`<button class="item-returned" onclick="updateStatus('${b.id}','returned');closeTxnPanel();closeActionDropdown('${b.id}')">📦 Mark as Returned</button>`:''}
+              ${b.status==='renting'?`<button class="item-returned" onclick="updateStatus('${b.id}','returned');closeTxnPanel();closeActionDropdown('${b.id}')"> Mark as Returned</button>`:''}
               ${(b.status==='pending'||b.status==='confirmed'||b.status==='renting')?`<button class="item-cancel" onclick="updateStatus('${b.id}','cancelled');closeActionDropdown('${b.id}')">✕ Cancel Booking</button>`:''}
               <div class="action-dropdown-divider"></div>
               <button class="item-danger" onclick="deleteBooking('${b.id}','${safeN}');closeActionDropdown('${b.id}')">🗑 Delete</button>
@@ -1631,10 +1631,10 @@ function _renderModalBody(b, days, total, imgs) {
         <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Purpose</span><br>${b.purpose || '—'}</div>
         <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Rental Dates</span><br>${b.startDate} → ${b.endDate} (${days} day${days>1?'s':''})</div>
         <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Pickup Time</span><br>${b.pickupTime || '—'}</div>
-        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Via Plane</span><br>${b.plane === 'yes' ? '✈️ Yes' : '🚗 No'}</div>
-        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">SD Card</span><br>${b.sdCard === 'yes' ? '💾 Has own' : '❌ No'}</div>
-        <div style="${b.receiveMethod === 'delivery' && b.deliveryAddress ? 'grid-column:1/-1' : ''}"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Receive</span><br>${b.receiveMethod === 'delivery' ? `🚚 Delivery${b.deliveryAddress ? `<br><span style="font-size:0.8rem;color:var(--mid);margin-top:0.2rem;display:block;">📍 ${b.deliveryAddress}</span>` : ''}` : '🏛️ Pick Up'}</div>
-        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Return</span><br>${b.returnMethod === 'meetup' ? '🤝 Brgy Hall' : '🚚 Deliver Back'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Via Plane</span><br>${b.plane === 'yes' ? ' Yes' : ' No'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">SD Card</span><br>${b.sdCard === 'yes' ? ' Has own' : ' No'}</div>
+        <div style="${b.receiveMethod === 'delivery' && b.deliveryAddress ? 'grid-column:1/-1' : ''}"><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Receive</span><br>${b.receiveMethod === 'delivery' ? ` Delivery${b.deliveryAddress ? `<br><span style="font-size:0.8rem;color:var(--mid);margin-top:0.2rem;display:block;">📍 ${b.deliveryAddress}</span>` : ''}` : ' Pick Up'}</div>
+        <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Return</span><br>${b.returnMethod === 'meetup' ? ' Brgy Hall' : ' Deliver Back'}</div>
         <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Payment</span><br>${b.payMethod?.toUpperCase() || '—'} · ${b.txnRef || '—'}</div>
         <div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Down Payment</span><br>₱${parseFloat(b.downPayment||0).toLocaleString()}</div>
         ${b.contactPersonName ? `<div><span style="font-size:0.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:0.1em">Contact Person</span><br><strong>${b.contactPersonName}</strong>${b.contactPersonPhone ? ` · ${b.contactPersonPhone}` : ""}${b.contactPersonRelationship ? ` <span style="font-size:0.75rem;color:var(--amber);font-weight:600;margin-left:0.3rem;">(${b.contactPersonRelationship})</span>` : ""}</div>` : ""}
