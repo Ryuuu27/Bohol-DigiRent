@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1F4B2B">
+    <title>Sign in · Catigbian Palayamanan FPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="lg">
+      <section class="lb">
+        <div class="brand">
+          <img src="images/logo.png" alt="Municipality of Catigbian seal">
+          <div><b>Municipality of Catigbian</b><span>Province of Bohol</span></div>
+        </div>
+        <h1>Catigbian Palayamanan Farmer-Partner's Association</h1>
+        <p>Equipment registration, membership and real-time tracking system</p>
+        <div class="chips">
+          <span>Member records</span>
+          <span>Equipment borrowing</span>
+          <span>Farmland records</span>
+          <span>Live GPS tracking</span>
+        </div>
+      </section>
+      <section class="lc">
+        <div class="lcard">
+          <h2>Welcome back!</h2>
+          <p class="sub">Sign in to your member account</p>
+          <div class="fld">
+            <label for="u">Username</label>
+            <input id="u" placeholder="Enter your username" autocomplete="username">
+          </div>
+          <div class="fld">
+            <label for="p">Password</label>
+            <input id="p" type="password" placeholder="Enter your password" autocomplete="current-password">
+          </div>
+          <button type="button" class="lnk" data-open="forgot" style="text-align:left;margin:-4px 0 14px">Forgot password?</button>
+          <a class="btn" href="member-dashboard.html">Sign in</a>
+          <a class="lnk" href="apply.html">New member? Apply for membership</a>
+          <small>Your data is protected under RA 10173 (Data Privacy Act of 2012).</small>
+        </div>
+      </section>
+    </div>
+    <dialog id="saved" aria-label="Saved">
+      <div class="box">
+        <div class="tick">&#10003;</div>
+        <h3>Saved successfully</h3>
+        <p>Your changes have been recorded.</p>
+        <button type="button" class="btn full" data-close>Done</button>
+      </div>
+    </dialog>
+    <dialog id="confirm" aria-label="Confirm">
+      <div class="box">
+        <h3>Are you sure?</h3>
+        <p>This action will update the record.</p>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn d" data-swap="saved">Confirm</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="forgot" aria-label="Reset password" style="width:min(460px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Reset your password</h3>
+        <div data-step="1">
+          <p style="text-align:left">Enter the contact number you registered with. We will text you a 6-digit code.</p>
+          <div class="fld"><label for="fm">Contact number</label><input id="fm" type="tel" inputmode="tel" placeholder="09XX XXX XXXX" autocomplete="tel"></div>
+          <div class="row" style="margin-top:20px">
+            <button type="button" class="btn o" data-close>Cancel</button>
+            <button type="button" class="btn" data-go="2">Send code</button>
+          </div>
+        </div>
+        <div data-step="2" hidden>
+          <p style="text-align:left">We sent a 6-digit code to your number. Enter it below.</p>
+          <div class="fld"><label for="fk">Verification code</label><input id="fk" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code"></div>
+          <button type="button" class="lnk" data-go="2" style="text-align:left;margin:8px 0 14px">Resend code</button>
+          <div class="row" style="margin-top:20px">
+            <button type="button" class="btn o" data-go="1">Back</button>
+            <button type="button" class="btn" data-go="3">Verify</button>
+          </div>
+        </div>
+        <div data-step="3" hidden>
+          <p style="text-align:left">Code confirmed. Choose a new password.</p>
+          <div class="fld"><label for="fn">New password</label><input id="fn" type="password" autocomplete="new-password"></div>
+          <div class="fld"><label for="fc">Confirm new password</label><input id="fc" type="password" autocomplete="new-password"></div>
+          <div class="row" style="margin-top:20px">
+            <button type="button" class="btn o" data-close>Cancel</button>
+            <button type="button" class="btn" data-swap="saved">Reset password</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="privacy" aria-label="Data privacy notice" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Data Privacy Notice</h3>
+        <p style="text-align:left">The Catigbian Palayamanan Farmer-Partner's Association collects your name, address, birthday, contact number and RSBSA number only to manage membership and equipment borrowing. Your information is protected under Republic Act No. 10173 (Data Privacy Act of 2012) and can be seen only by authorized administrators.</p>
+        <button type="button" class="btn full" data-close>I understand</button>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+    <script>
+      (function(){
+        var d=document.getElementById('forgot');
+        function show(n){d.querySelectorAll('[data-step]').forEach(function(x){x.hidden=x.dataset.step!==String(n);});}
+        d.addEventListener('click',function(e){var g=e.target.closest('[data-go]');if(g)show(g.dataset.go);});
+        d.addEventListener('close',function(){show(1);});
+      })();
+    </script>
+  </body>
+</html>

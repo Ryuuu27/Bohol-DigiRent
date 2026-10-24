@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1F4B2B">
+    <title>My Farm Lands · Catigbian Palayamanan FPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sb">
+        <div class="brand">
+          <img src="images/logo.png" alt="Municipality of Catigbian seal">
+          <div><b>PALAYAMANAN FPA</b><span>Municipality of Catigbian</span></div>
+        </div>
+        <div class="sys">Equipment System</div>
+        <span class="role">MEMBER</span>
+        <nav class="nav">
+          <a href="member-dashboard.html">My Dashboard</a>
+          <a href="member-work-requests.html">Work Requests</a>
+          <a href="member-farm-lands.html" aria-current="page">My Farm Lands</a>
+          <a href="member-borrowings.html">My Borrowings</a>
+          <a href="member-work-history.html">Work History</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <header class="top">
+          <h1>My Farm Lands</h1>
+          <input class="search" type="search" placeholder="Search members, equipment, request" aria-label="Search">
+          <div class="who"><div class="av">M</div>Member</div>
+        </header>
+        <main class="body">
+          <section class="card">
+            <div class="hd">
+              <h2>My farm lands (2)</h2>
+              <button type="button" class="btn" data-open="saved">+ Add farm land</button>
+            </div>
+            <div class="wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Location</th>
+                    <th>Area (ha)</th>
+                    <th>Registered</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>P-001</td>
+                    <td>Sitio Upper</td>
+                    <td>2.5</td>
+                    <td>2026-01-10</td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="saved">Edit</button>
+                        <button type="button" class="sm d" data-open="confirm">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="alt">
+                    <td>P-004</td>
+                    <td>Purok 1</td>
+                    <td>1.5</td>
+                    <td>2026-03-02</td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="saved">Edit</button>
+                        <button type="button" class="sm d" data-open="confirm">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <dialog id="saved" aria-label="Saved">
+      <div class="box">
+        <div class="tick">&#10003;</div>
+        <h3>Saved successfully</h3>
+        <p>Your changes have been recorded.</p>
+        <button type="button" class="btn full" data-close>Done</button>
+      </div>
+    </dialog>
+    <dialog id="confirm" aria-label="Confirm">
+      <div class="box">
+        <h3>Are you sure?</h3>
+        <p>This action will update the record.</p>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn d" data-swap="saved">Confirm</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="privacy" aria-label="Data privacy notice" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Data Privacy Notice</h3>
+        <p style="text-align:left">The Catigbian Palayamanan Farmer-Partner's Association collects your name, address, birthday, contact number and RSBSA number only to manage membership and equipment borrowing. Your information is protected under Republic Act No. 10173 (Data Privacy Act of 2012) and can be seen only by authorized administrators.</p>
+        <button type="button" class="btn full" data-close>I understand</button>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>

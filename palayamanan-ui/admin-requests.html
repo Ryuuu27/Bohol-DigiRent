@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1F4B2B">
+    <title>Work Requests · Catigbian Palayamanan FPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sb">
+        <div class="brand">
+          <img src="images/logo.png" alt="Municipality of Catigbian seal">
+          <div><b>PALAYAMANAN FPA</b><span>Municipality of Catigbian</span></div>
+        </div>
+        <div class="sys">Equipment System</div>
+        <span class="role">ADMIN</span>
+        <nav class="nav">
+          <a href="admin-dashboard.html">Dashboard</a>
+          <a href="admin-live-map.html">Live Map</a>
+          <a href="admin-members.html">Members</a>
+          <a href="admin-operators.html">Operators</a>
+          <a href="admin-requests.html" aria-current="page">Work Requests</a>
+          <a href="admin-assignments.html">Assignments</a>
+          <a href="admin-borrowing.html">Borrowing</a>
+          <a href="admin-farm-lands.html">Farm Lands</a>
+          <a href="admin-equipment.html">Equipment</a>
+          <a href="admin-accounts.html">Accounts</a>
+          <a href="admin-reports.html">Reports</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <header class="top">
+          <h1>Work Requests</h1>
+          <input class="search" type="search" placeholder="Search members, equipment, request" aria-label="Search">
+          <div class="who"><div class="av">A</div>Admin</div>
+        </header>
+        <main class="body">
+          <section class="card">
+            <div class="hd"><h2>Work requests from farmers</h2></div>
+            <div class="filters" role="group" aria-label="Filter by status">
+              <button type="button" class="fl" data-filter="pending" aria-pressed="true">Pending<span>2</span></button>
+              <button type="button" class="fl" data-filter="assigned" aria-pressed="false">
+                Assigned
+                <span>1</span>
+              </button>
+              <button type="button" class="fl" data-filter="in progress" aria-pressed="false">
+                In progress
+                <span>3</span>
+              </button>
+              <button type="button" class="fl" data-filter="completed" aria-pressed="false">
+                Completed
+                <span>1</span>
+              </button>
+              <button type="button" class="fl" data-filter="rejected" aria-pressed="false">
+                Rejected
+                <span>1</span>
+              </button>
+              <button type="button" class="fl" data-filter="all" aria-pressed="false">All<span>8</span></button>
+            </div>
+            <div class="wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Farmer</th>
+                    <th>Work</th>
+                    <th>Farm land</th>
+                    <th>Equipment</th>
+                    <th>Date</th>
+                    <th>Operator</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-status="pending">
+                    <td>R-001</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Plowing</td>
+                    <td>Sitio Upper · 2.5 ha</td>
+                    <td>Tractor</td>
+                    <td>2026-10-18</td>
+                    <td>—</td>
+                    <td><span class="pill warn">pending</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="assign">Assign operator</button>
+                        <button type="button" class="sm d" data-open="confirm">Reject</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="alt" data-status="pending">
+                    <td>R-002</td>
+                    <td>Maria Santos</td>
+                    <td>Harvesting</td>
+                    <td>Sitio Lower · 1.8 ha</td>
+                    <td>Harvester</td>
+                    <td>2026-10-19</td>
+                    <td>—</td>
+                    <td><span class="pill warn">pending</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="assign">Assign operator</button>
+                        <button type="button" class="sm d" data-open="confirm">Reject</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr data-status="assigned" hidden>
+                    <td>R-007</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Hauling</td>
+                    <td>Purok 1 · 1.5 ha</td>
+                    <td>Tractor B</td>
+                    <td>2026-10-20</td>
+                    <td>Eddie Lim</td>
+                    <td><span class="pill bl">assigned</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="assign">Reassign</button>
+                        <button type="button" class="sm d" data-open="confirm">Cancel</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="alt" data-status="in progress" hidden>
+                    <td>R-004</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Plowing</td>
+                    <td>Sitio Upper · 2.5 ha</td>
+                    <td>Tractor A</td>
+                    <td>2026-10-17</td>
+                    <td>Ben Ramos</td>
+                    <td><span class="pill ok">in progress</span></td>
+                    <td><div class="acts"><a class="sm" href="admin-live-map.html">Track</a></div></td>
+                  </tr>
+                  <tr data-status="in progress" hidden>
+                    <td>R-005</td>
+                    <td>Maria Santos</td>
+                    <td>Harvesting</td>
+                    <td>Sitio Lower · 1.8 ha</td>
+                    <td>Rice Harvester</td>
+                    <td>2026-10-16</td>
+                    <td>Carlo Dizon</td>
+                    <td><span class="pill ok">in progress</span></td>
+                    <td><div class="acts"><a class="sm" href="admin-live-map.html">Track</a></div></td>
+                  </tr>
+                  <tr class="alt" data-status="in progress" hidden>
+                    <td>R-003</td>
+                    <td>Ana Lopez</td>
+                    <td>Plowing</td>
+                    <td>Purok 5 · 3.2 ha</td>
+                    <td>Tractor C</td>
+                    <td>2026-10-12</td>
+                    <td>Dante Uy</td>
+                    <td><span class="pill ok">in progress</span></td>
+                    <td><div class="acts"><a class="sm" href="admin-live-map.html">Track</a></div></td>
+                  </tr>
+                  <tr data-status="completed" hidden>
+                    <td>R-006</td>
+                    <td>Pedro Reyes</td>
+                    <td>Hauling</td>
+                    <td>Purok 5 · 1.0 ha</td>
+                    <td>Tractor B</td>
+                    <td>2026-09-28</td>
+                    <td>Eddie Lim</td>
+                    <td><span class="pill gr">completed</span></td>
+                    <td><div class="acts"><button type="button" class="sm" data-open="saved">View</button></div></td>
+                  </tr>
+                  <tr class="alt" data-status="rejected" hidden>
+                    <td>R-008</td>
+                    <td>Ana Lopez</td>
+                    <td>Spraying</td>
+                    <td>Purok 5 · 3.2 ha</td>
+                    <td>Sprayer</td>
+                    <td>2026-10-14</td>
+                    <td>—</td>
+                    <td><span class="pill or">rejected</span></td>
+                    <td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <dialog id="saved" aria-label="Saved">
+      <div class="box">
+        <div class="tick">&#10003;</div>
+        <h3>Saved successfully</h3>
+        <p>Your changes have been recorded.</p>
+        <button type="button" class="btn full" data-close>Done</button>
+      </div>
+    </dialog>
+    <dialog id="confirm" aria-label="Confirm">
+      <div class="box">
+        <h3>Are you sure?</h3>
+        <p>This action will update the record.</p>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn d" data-swap="saved">Confirm</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="privacy" aria-label="Data privacy notice" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Data Privacy Notice</h3>
+        <p style="text-align:left">The Catigbian Palayamanan Farmer-Partner's Association collects your name, address, birthday, contact number and RSBSA number only to manage membership and equipment borrowing. Your information is protected under Republic Act No. 10173 (Data Privacy Act of 2012) and can be seen only by authorized administrators.</p>
+        <button type="button" class="btn full" data-close>I understand</button>
+      </div>
+    </dialog>
+    <dialog id="assign" aria-label="Assign operator" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Assign operator</h3>
+        <p style="text-align:left">Choose who will do this job. The operator is notified and the job appears in their assignments.</p>
+        <div style="display:grid;gap:12px;margin-bottom:20px">
+          <div class="fld">
+            <label for="as1">Request</label>
+            <input id="as1" value="R-001 · Juan Dela Cruz · Plowing · Sitio Upper, 2.5 ha" readonly>
+          </div>
+          <div class="fld">
+            <label for="as2">Operator</label>
+            <select id="as2">
+              <option>Select operator</option>
+              <option>Eddie Lim (available)</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="as3">Equipment</label>
+            <select id="as3"><option>Select equipment</option><option>Tractor B (available · no GPS)</option></select>
+          </div>
+          <div class="fld"><label for="as4">Schedule</label><input id="as4" type="date" value="2026-10-18"></div>
+          <div class="fld">
+            <label for="as5">Instructions</label>
+            <input id="as5" placeholder="Where to go, what to bring, special notes">
+          </div>
+        </div>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn" data-swap="saved">Assign&amp;notify operator</button>
+        </div>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>

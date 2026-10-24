@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1F4B2B">
+    <title>My Assignments · Catigbian Palayamanan FPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sb">
+        <div class="brand">
+          <img src="images/logo.png" alt="Municipality of Catigbian seal">
+          <div><b>PALAYAMANAN FPA</b><span>Municipality of Catigbian</span></div>
+        </div>
+        <div class="sys">Equipment System</div>
+        <span class="role">MEMBER · OPERATOR</span>
+        <nav class="nav">
+          <a href="member-dashboard.html">My Dashboard</a>
+          <a href="member-work-requests.html">Work Requests</a>
+          <a href="member-farm-lands.html">My Farm Lands</a>
+          <a href="member-borrowings.html">My Borrowings</a>
+          <a href="member-work-history.html">Work History</a>
+          <span class="gl">Operator</span>
+          <a href="operator-dashboard.html">Job Dashboard</a>
+          <a href="operator-assignments.html" aria-current="page">My Assignments</a>
+          <a href="operator-history.html">Job History</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <header class="top">
+          <h1>My Assignments</h1>
+          <input class="search" type="search" placeholder="Search members, equipment, request" aria-label="Search">
+          <div class="who"><div class="av">O</div>Operator</div>
+        </header>
+        <main class="body">
+          <section class="card">
+            <div class="hd"><h2>My assignments</h2></div>
+            <p style="margin:0 0 14px;color:var(--mut)">If the equipment has a GPS tracker, tracking turns on when you press Start job and off when you press Complete job. Equipment without GPS is not tracked.</p>
+            <div class="filters" role="group" aria-label="Filter by status">
+              <button type="button" class="fl" data-filter="all" aria-pressed="true">All<span>4</span></button>
+              <button type="button" class="fl" data-filter="new" aria-pressed="false">New<span>1</span></button>
+              <button type="button" class="fl" data-filter="accepted" aria-pressed="false">
+                Accepted
+                <span>1</span>
+              </button>
+              <button type="button" class="fl" data-filter="in progress" aria-pressed="false">
+                In progress
+                <span>1</span>
+              </button>
+              <button type="button" class="fl" data-filter="completed" aria-pressed="false">
+                Completed
+                <span>1</span>
+              </button>
+            </div>
+            <div class="wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Request</th>
+                    <th>Farmer</th>
+                    <th>Work</th>
+                    <th>Farm land</th>
+                    <th>Equipment</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-status="in progress">
+                    <td>R-004</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Plowing</td>
+                    <td>Sitio Upper · 2.5 ha</td>
+                    <td>Tractor A</td>
+                    <td>2026-10-17</td>
+                    <td><span class="pill ok">in progress</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="saved">Complete job</button>
+                        <button type="button" class="sm" data-open="saved">Report issue</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="alt" data-status="new">
+                    <td>R-009</td>
+                    <td>Ana Lopez</td>
+                    <td>Harrowing</td>
+                    <td>Purok 5 · 1.0 ha</td>
+                    <td>Tractor A</td>
+                    <td>2026-10-20</td>
+                    <td><span class="pill warn">new</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="saved">Accept</button>
+                        <button type="button" class="sm d" data-open="confirm">Decline</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr data-status="accepted">
+                    <td>R-010</td>
+                    <td>Maria Santos</td>
+                    <td>Plowing</td>
+                    <td>Sitio Lower · 1.8 ha</td>
+                    <td>Tractor A</td>
+                    <td>2026-10-21</td>
+                    <td><span class="pill bl">accepted</span></td>
+                    <td>
+                      <div class="acts"><button type="button" class="sm" data-open="saved">Start job</button></div>
+                    </td>
+                  </tr>
+                  <tr class="alt" data-status="completed">
+                    <td>R-011</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Hauling</td>
+                    <td>Purok 1 · 1.5 ha</td>
+                    <td>Tractor A</td>
+                    <td>2026-10-05</td>
+                    <td><span class="pill gr">completed</span></td>
+                    <td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <dialog id="saved" aria-label="Saved">
+      <div class="box">
+        <div class="tick">&#10003;</div>
+        <h3>Saved successfully</h3>
+        <p>Your changes have been recorded.</p>
+        <button type="button" class="btn full" data-close>Done</button>
+      </div>
+    </dialog>
+    <dialog id="confirm" aria-label="Confirm">
+      <div class="box">
+        <h3>Are you sure?</h3>
+        <p>This action will update the record.</p>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn d" data-swap="saved">Confirm</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="privacy" aria-label="Data privacy notice" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Data Privacy Notice</h3>
+        <p style="text-align:left">The Catigbian Palayamanan Farmer-Partner's Association collects your name, address, birthday, contact number and RSBSA number only to manage membership and equipment borrowing. Your information is protected under Republic Act No. 10173 (Data Privacy Act of 2012) and can be seen only by authorized administrators.</p>
+        <button type="button" class="btn full" data-close>I understand</button>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>

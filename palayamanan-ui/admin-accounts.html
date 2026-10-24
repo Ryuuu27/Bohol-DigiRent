@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1F4B2B">
+    <title>Accounts · Catigbian Palayamanan FPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sb">
+        <div class="brand">
+          <img src="images/logo.png" alt="Municipality of Catigbian seal">
+          <div><b>PALAYAMANAN FPA</b><span>Municipality of Catigbian</span></div>
+        </div>
+        <div class="sys">Equipment System</div>
+        <span class="role">ADMIN</span>
+        <nav class="nav">
+          <a href="admin-dashboard.html">Dashboard</a>
+          <a href="admin-live-map.html">Live Map</a>
+          <a href="admin-members.html">Members</a>
+          <a href="admin-operators.html">Operators</a>
+          <a href="admin-requests.html">Work Requests</a>
+          <a href="admin-assignments.html">Assignments</a>
+          <a href="admin-borrowing.html">Borrowing</a>
+          <a href="admin-farm-lands.html">Farm Lands</a>
+          <a href="admin-equipment.html">Equipment</a>
+          <a href="admin-accounts.html" aria-current="page">Accounts</a>
+          <a href="admin-reports.html">Reports</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <header class="top">
+          <h1>Accounts</h1>
+          <input class="search" type="search" placeholder="Search members, equipment, request" aria-label="Search">
+          <div class="who"><div class="av">A</div>Admin</div>
+        </header>
+        <main class="body">
+          <section class="card">
+            <div class="hd"><h2>Create account</h2></div>
+            <div class="frm">
+              <div class="fld">
+                <label for="f0">Member</label>
+                <select id="f0"><option>Select member</option></select>
+              </div>
+              <div class="fld"><label for="f1">Username</label><input id="f1" placeholder="juan.dc"></div>
+              <div class="fld"><label for="f2">Temporary password</label><input id="f2" placeholder="••••••••"></div>
+              <button type="button" class="btn" data-open="saved">Create</button>
+            </div>
+          </section>
+          <section class="card">
+            <div class="hd"><h2>User accounts (5)</h2></div>
+            <div class="wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Member</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>admin01</td>
+                    <td>Administrator</td>
+                    <td><span class="pill bl">Admin</span></td>
+                    <td><span class="pill ok">active</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="confirm">Disable</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="alt">
+                    <td>juan.dc</td>
+                    <td>Juan Dela Cruz</td>
+                    <td><span class="pill gr">Member</span></td>
+                    <td><span class="pill ok">active</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="confirm">Disable</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>ben.r</td>
+                    <td>Ben Ramos</td>
+                    <td><span class="pill bl">Operator</span></td>
+                    <td><span class="pill ok">active</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="confirm">Disable</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="alt">
+                    <td>maria.s</td>
+                    <td>Maria Santos</td>
+                    <td><span class="pill gr">Member</span></td>
+                    <td><span class="pill ok">active</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="confirm">Disable</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>pedro.r</td>
+                    <td>Pedro Reyes</td>
+                    <td><span class="pill gr">Member</span></td>
+                    <td><span class="pill gr">disabled</span></td>
+                    <td>
+                      <div class="acts">
+                        <button type="button" class="sm" data-open="saved">Enable</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <dialog id="saved" aria-label="Saved">
+      <div class="box">
+        <div class="tick">&#10003;</div>
+        <h3>Saved successfully</h3>
+        <p>Your changes have been recorded.</p>
+        <button type="button" class="btn full" data-close>Done</button>
+      </div>
+    </dialog>
+    <dialog id="confirm" aria-label="Confirm">
+      <div class="box">
+        <h3>Are you sure?</h3>
+        <p>This action will update the record.</p>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn d" data-swap="saved">Confirm</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="privacy" aria-label="Data privacy notice" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Data Privacy Notice</h3>
+        <p style="text-align:left">The Catigbian Palayamanan Farmer-Partner's Association collects your name, address, birthday, contact number and RSBSA number only to manage membership and equipment borrowing. Your information is protected under Republic Act No. 10173 (Data Privacy Act of 2012) and can be seen only by authorized administrators.</p>
+        <button type="button" class="btn full" data-close>I understand</button>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>

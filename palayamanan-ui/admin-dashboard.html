@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1F4B2B">
+    <title>Dashboard · Catigbian Palayamanan FPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sb">
+        <div class="brand">
+          <img src="images/logo.png" alt="Municipality of Catigbian seal">
+          <div><b>PALAYAMANAN FPA</b><span>Municipality of Catigbian</span></div>
+        </div>
+        <div class="sys">Equipment System</div>
+        <span class="role">ADMIN</span>
+        <nav class="nav">
+          <a href="admin-dashboard.html" aria-current="page">Dashboard</a>
+          <a href="admin-live-map.html">Live Map</a>
+          <a href="admin-members.html">Members</a>
+          <a href="admin-operators.html">Operators</a>
+          <a href="admin-requests.html">Work Requests</a>
+          <a href="admin-assignments.html">Assignments</a>
+          <a href="admin-borrowing.html">Borrowing</a>
+          <a href="admin-farm-lands.html">Farm Lands</a>
+          <a href="admin-equipment.html">Equipment</a>
+          <a href="admin-accounts.html">Accounts</a>
+          <a href="admin-reports.html">Reports</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <header class="top">
+          <h1>Dashboard</h1>
+          <input class="search" type="search" placeholder="Search members, equipment, request" aria-label="Search">
+          <div class="who"><div class="av">A</div>Admin</div>
+        </header>
+        <main class="body">
+          <div class="stats">
+            <a class="st" href="admin-members.html"><b>18</b><span>Active members</span></a>
+            <a class="st" href="admin-equipment.html"><b>12</b><span>Equipment</span></a>
+            <a class="st" href="admin-assignments.html"><b>4</b><span>In use</span></a>
+            <a class="st" href="admin-equipment.html"><b>7</b><span>Available</span></a>
+            <a class="st" href="admin-requests.html"><b>2</b><span>Pending requests</span></a>
+            <a class="st" href="admin-farm-lands.html"><b>9.0 ha</b><span>Registered farm land</span></a>
+          </div>
+          <section class="card">
+            <div class="hd">
+              <h2>Equipment currently in the field</h2>
+              <a class="btn" href="admin-live-map.html">View live map</a>
+            </div>
+            <div class="wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Equipment</th>
+                    <th>Operator</th>
+                    <th>Farmer</th>
+                    <th>Farm land</th>
+                    <th>Area</th>
+                    <th>Distance from HQ</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a href="admin-live-map.html">Tractor A</a></td>
+                    <td>Ben Ramos</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Sitio Upper</td>
+                    <td>2.5 ha</td>
+                    <td>3.1 km</td>
+                    <td><span class="pill or">outside zone</span></td>
+                  </tr>
+                  <tr class="alt">
+                    <td><a href="admin-live-map.html">Rice Harvester</a></td>
+                    <td>Carlo Dizon</td>
+                    <td>Maria Santos</td>
+                    <td>Sitio Lower</td>
+                    <td>1.8 ha</td>
+                    <td>1.2 km</td>
+                    <td><span class="pill bl">in use</span></td>
+                  </tr>
+                  <tr>
+                    <td><a href="admin-live-map.html">Tractor C</a></td>
+                    <td>Dante Uy</td>
+                    <td>Ana Lopez</td>
+                    <td>Purok 5</td>
+                    <td>3.2 ha</td>
+                    <td>5.4 km</td>
+                    <td><span class="pill or">outside zone</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <dialog id="saved" aria-label="Saved">
+      <div class="box">
+        <div class="tick">&#10003;</div>
+        <h3>Saved successfully</h3>
+        <p>Your changes have been recorded.</p>
+        <button type="button" class="btn full" data-close>Done</button>
+      </div>
+    </dialog>
+    <dialog id="confirm" aria-label="Confirm">
+      <div class="box">
+        <h3>Are you sure?</h3>
+        <p>This action will update the record.</p>
+        <div class="row">
+          <button type="button" class="btn o" data-close>Cancel</button>
+          <button type="button" class="btn d" data-swap="saved">Confirm</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="privacy" aria-label="Data privacy notice" style="width:min(520px,calc(100% - 32px))">
+      <div class="box" style="text-align:left">
+        <h3>Data Privacy Notice</h3>
+        <p style="text-align:left">The Catigbian Palayamanan Farmer-Partner's Association collects your name, address, birthday, contact number and RSBSA number only to manage membership and equipment borrowing. Your information is protected under Republic Act No. 10173 (Data Privacy Act of 2012) and can be seen only by authorized administrators.</p>
+        <button type="button" class="btn full" data-close>I understand</button>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>
